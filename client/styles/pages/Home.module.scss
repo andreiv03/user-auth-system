@@ -1,0 +1,10 @@
+.hero_section {
+  width: 100vw;
+  height: 100vh;
+  background: rgb(255, 200, 81);
+  background: radial-gradient(
+    circle,
+    rgba(255, 200, 81, 1) 50%,
+    rgba(255, 180, 19, 1) 100%
+  );
+}

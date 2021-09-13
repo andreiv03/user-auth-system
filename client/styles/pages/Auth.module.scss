@@ -1,0 +1,219 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 400px;
+  height: 100vh;
+  margin: 0 auto;
+}
+
+.title {
+  width: 100%;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 0.2em;
+}
+
+.subtitle {
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--grey);
+}
+
+.caption {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--grey);
+  margin-top: 1rem;
+
+  a {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 150ms ease-in;
+  }
+
+  a:hover {
+    color: var(--dark-accent);
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 2rem;
+
+  .container {
+    position: relative;
+    width: 100%;
+    height: 3.5rem;
+
+    input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      font-size: 1rem;
+      font-weight: 500;
+      background: white;
+      padding: 1.5rem 3rem 0.75rem 1rem;
+      border-radius: 5px;
+    }
+
+    label {
+      position: absolute;
+      top: 50%;
+      left: 1rem;
+      transform: translateY(-50%);
+      pointer-events: none;
+      cursor: text;
+      color: var(--grey);
+      font-size: 1rem;
+      font-weight: 500;
+      transition: 100ms ease-in;
+      -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+      -khtml-user-select: none; /* Konqueror HTML */
+      -moz-user-select: none; /* Old versions of Firefox */
+      -ms-user-select: none; /* Internet Explorer/Edge */
+      user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+
+      span {
+        background: none !important;
+      }
+    }
+
+    input:focus ~ label,
+    input:not(:placeholder-shown):not(:focus) ~ label {
+      top: 0.5rem;
+      transform: unset;
+      font-size: 0.6rem;
+    }
+
+    .underline {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--grey);
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      transition: 100ms ease-in;
+    }
+
+    .valid {
+      background: var(--valid);
+      color: var(--valid);
+    }
+
+    .warning {
+      background: var(--warning);
+      color: var(--warning);
+    }
+
+    .error {
+      background: var(--error);
+      color: var(--error);
+    }
+
+    .show_button {
+      cursor: pointer;
+      color: var(--grey);
+      font-size: 1rem;
+      position: absolute;
+      top: 50%;
+      right: 1rem;
+      transform: translateY(-50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .container:not(:last-of-type) {
+    margin-bottom: 0.75rem;
+  }
+
+  .checkbox {
+    display: block;
+    position: relative;
+    padding-left: 25px;
+    margin-top: 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--grey);
+    width: fit-content;
+
+    input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    .checkmark {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      height: 15px;
+      width: 15px;
+      border-radius: 50%;
+      background-color: var(--grey);
+    }
+
+    input:checked ~ .checkmark {
+      background-color: var(--valid);
+    }
+
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+
+    input:checked ~ .checkmark:after {
+      display: block;
+    }
+
+    .checkmark:after {
+      left: 5.5px;
+      top: 3.2px;
+      width: 4px;
+      height: 7px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+  }
+
+  button {
+    width: 100%;
+    height: 3rem;
+    margin-top: 1rem;
+    text-align: center;
+    background: var(--accent);
+    color: var(--background);
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 150ms ease-in;
+
+    &:hover {
+      background: var(--dark-accent);
+    }
+  }
+}

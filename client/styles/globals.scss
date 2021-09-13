@@ -1,0 +1,39 @@
+:root {
+  --foreground: #2c2b40;
+  --background: #f6f8fc;
+  --accent: #6f50ff;
+  --dark-accent: hsl(251, 100%, 60%);
+  --grey: #6a696e;
+
+  --valid: #01d5bb;
+  --warning: #f4a823;
+  --error: #ff0800;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+input,
+select,
+button {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  color: var(--foreground);
+}
+
+input,
+select,
+button {
+  border: none;
+  outline: none;
+  background: none;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
