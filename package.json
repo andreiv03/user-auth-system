@@ -1,7 +1,10 @@
 {
-  "name": "e-commerce-website",
+  "name": "ecommerce-website",
   "version": "1.0.0",
-  "description": "This project is a flower shop website.",
+  "description": "",
+  "keywords": [],
+  "author": "Andrei Voicu",
+  "license": "ISC",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -13,28 +16,19 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
-  "keywords": [],
-  "author": "Andrei Voicu",
-  "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.4",
     "bcrypt": "^5.0.1",
-    "cloudinary": "^1.25.2",
     "concurrently": "^6.2.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.6.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
-    "google-auth-library": "^7.1.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.12.12",
-    "node-fetch": "^2.6.1",
-    "password-validator": "^5.1.1",
+    "mongoose": "^6.0.8",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
-  },
-  "type": "module"
+  }
 }

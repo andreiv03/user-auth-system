@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const usersSchema = new mongoose.Schema({
-  first_name: {
+  firstName: {
     type: String,
     required: true,
     trim: true
   },
-  last_name: {
+  lastName: {
     type: String,
     required: true,
     trim: true
@@ -22,10 +22,6 @@ const usersSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  phone_number: {
-    type: String,
-    trim: true
-  },
   cart: {
     type: Array,
     default: []
@@ -34,4 +30,4 @@ const usersSchema = new mongoose.Schema({
   timestamps: true
 });
 
-export default mongoose.model("Users", usersSchema);
+module.exports = mongoose.model("Users", usersSchema);

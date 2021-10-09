@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 
-import styles from "../styles/pages/Home.module.scss";
+import styles from "../styles/pages/home.module.scss";
 
 const Home: NextPage = () => {
   return (

@@ -1,37 +1,40 @@
 import type { NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
-import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
-import axios from "axios";
-import { passwordStrength as handlePasswordStrength } from "check-password-strength";
+import { RiEyeFill, RiEyeOffFill, RiInformationFill } from "react-icons/ri";
 
-import styles from "../styles/pages/Auth.module.scss";
+import styles from "../styles/pages/auth.module.scss";
 import AuthService from "../services/AuthService";
 
 export interface FormData {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 };
 
 interface FormErrors {
-  first_name: boolean;
-  last_name: boolean;
+  firstName: boolean;
+  lastName: boolean;
   email: boolean;
+  password: string;
 };
 
-const handleFormErros = (name: string, value: string): boolean => {
-  if (name === "first_name" || name === "last_name") return value.length < 3;
-  else return !AuthService.validateEmail(value);
-}
-
 const Register: NextPage = () => {
-  const [formData, setFormData] = useState<FormData>({ first_name: "", last_name: "", email: "", password: "" });
-  const [formErrors, setFormErrors] = useState<FormErrors>({ first_name: true, last_name: true, email: true });
-  const [passwordStrength, setPasswordStrength] = useState<number>(0);
+  const [formData, setFormData] = useState<FormData>({ firstName: "", lastName: "", email: "", password: "" });
+  const [formErrors, setFormErrors] = useState<FormErrors>({ firstName: true, lastName: true, email: true, password: "" });
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [checkboxValue, setCheckboxValue] = useState<boolean>(false);
+  const [showTooltip, setShowTooltip] = useState<boolean>(false);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+
+  const router = useRouter();
+
+  const handleFormErros = (name: string, value: string): (boolean | string) => {
+    if (name === "firstName" || name === "lastName") return value.length < 3;
+    else if (name === "email") return !AuthService.validateEmail(value);
+    else return AuthService.passwordStrength(value);
+  }
 
   const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setFormData({
@@ -39,81 +42,81 @@ const Register: NextPage = () => {
       [event.target.name]: event.target.value
     });
 
-    if (event.target.name === "password") 
-      setPasswordStrength(handlePasswordStrength(event.target.value).id);
-    else setFormErrors({
+    setFormErrors({
       ...formErrors,
       [event.target.name]: handleFormErros(event.target.name, event.target.value)
     });
   }
 
-  const handlePasswordStrengthColor = (): string => {
-    if (passwordStrength === 0 || passwordStrength === 1) return styles.error;
-    else if (passwordStrength === 2) return styles.warning;
-    else return styles.valid;
-  }
-
-  const handleShowPassword = (): void => setShowPassword(!showPassword);
-
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
 
     try {
-      const { data } = await AuthService.register(formData);
+      if (!formData.firstName || !formData.lastName || !formData.email || !formData.password)
+        return alert("Please fill in all the fields!");
 
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return alert(error.response?.data.message);
-      }
+      else if (formErrors.firstName || formErrors.lastName || formErrors.email)
+        return alert(`"First Name", "Last Name" and "Email" fields must have valid values before you can register!`);
+
+      await AuthService.register(formData);
+
+      localStorage.setItem("firstLogin", "true");
+      router.push("/");
+    } catch (error: any) {
+      return alert(error.response.data.message);
     }
   }
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Register to WEBSITE_NAME</h1>
-      <h3 className={styles.subtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse in commodo libero.</h3>
-    
-      <form className={styles.form} onSubmit={handleFormSubmit} autoComplete="off">
-        <div className={styles.container}>
-          <input type="text" id="first_name" name="first_name" placeholder=" " value={formData.first_name} onChange={handleFormDataChange} />
-          <label htmlFor="first_name">First Name</label>
-
-          <div className={!formData.first_name ? styles.underline : `${styles.underline} ${formErrors.first_name ? styles.error : styles.valid}`} />
+    <div className={styles.page}>
+      <div className={styles.content}>
+        <div className={styles.top_section}>
+          <h1 className={styles.title}>Register to WEBSITE</h1>
+          <h3 className={styles.subtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse in commodo libero.</h3>
         </div>
+      
+        <form className={styles.form} onSubmit={handleFormSubmit} noValidate>
+          <div className={!formData.firstName ? styles.field : `${styles.field} ${formErrors.firstName ? styles.error : styles.valid}`}>
+            <input type="text" id="firstName" name="firstName" autoComplete="given-name" placeholder=" " value={formData.firstName} onChange={handleFormDataChange} />
+            <label htmlFor="firstName">First Name</label>
+          </div>
 
-        <div className={styles.container}>
-          <input type="text" id="last_name" name="last_name" placeholder=" " value={formData.last_name} onChange={handleFormDataChange} />
-          <label htmlFor="last_name">Last Name</label>
+          <div className={!formData.lastName ? styles.field : `${styles.field} ${formErrors.lastName ? styles.error : styles.valid}`}>
+            <input type="text" id="lastName" name="lastName" autoComplete="family-name" placeholder=" " value={formData.lastName} onChange={handleFormDataChange} />
+            <label htmlFor="lastName">Last Name</label>
+          </div>
 
-          <div className={!formData.last_name ? styles.underline : `${styles.underline} ${formErrors.last_name ? styles.error : styles.valid}`} />
-        </div>
+          <div className={!formData.email ? styles.field : `${styles.field} ${formErrors.email ? styles.error : styles.valid}`}>
+            <input type="email" id="email" name="email" autoComplete="email" placeholder=" " value={formData.email} onChange={handleFormDataChange} />
+            <label htmlFor="email">Email</label>
+          </div>
 
-        <div className={styles.container}>
-          <input type="email" id="email" name="email" placeholder=" " value={formData.email} onChange={handleFormDataChange} />
-          <label htmlFor="email">Email</label>
+          <div className={`${!formData.password ? styles.field : `${styles.field} ${formErrors.password === "Weak" ? styles.error : formErrors.password === "Medium" ? styles.warning : styles.valid}`} ${showTooltip ? styles.tooltip_active : ""}`}>
+            <input type={showPassword ? "text" : "password"} id="password" name="password" autoComplete="new-password" placeholder=" " value={formData.password} onChange={handleFormDataChange} />
+            <label htmlFor="password">Password{formData.password && <span> ({formErrors.password})</span>}</label>
+            
+            <p className={styles.info_text}>You can create an account even if the password is weak, but it will be poorly secured.</p>
 
-          <div className={!formData.email ? styles.underline : `${styles.underline} ${formErrors.email ? styles.error : styles.valid}`} />
-        </div>
+            <div className={styles.show_button} onClick={() => !showTooltip && setShowPassword(!showPassword)}>{showPassword ? <RiEyeOffFill /> : <RiEyeFill />}</div>
+            <div className={styles.info_button} onClick={() => setShowTooltip(!showTooltip)}><RiInformationFill /></div>
+          </div>
 
-        <div className={styles.container}>
-          <input type={showPassword ? "text" : "password"} id="password" name="password" placeholder=" " value={formData.password} onChange={handleFormDataChange} />
-          <label htmlFor="password">Password 
-            <span className={handlePasswordStrengthColor()}>{formData.password && ` (${handlePasswordStrength(formData.password).value})`}</span>
+          <label className={styles.checkbox} htmlFor="checkbox">
+            <span>I agree with all service agreement.</span>
+
+            <input type="checkbox" id="checkbox" checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
+            <span className={styles.checkmark} />
           </label>
 
-          <div className={!formData.password ? styles.underline : `${styles.underline} ${handlePasswordStrengthColor()}`} />
-          <div className={styles.show_button} onClick={handleShowPassword}>{showPassword ? <RiEyeOffFill /> : <RiEyeFill />}</div>
+          <button type="submit">Register</button>
+        </form>
+
+        <div className={styles.bottom_section}>
+          <h3 className={styles.caption}>Do you have an account? <Link href="/login">Login</Link></h3>
         </div>
+      </div>
 
-        <label className={styles.checkbox} htmlFor="checkbox">I agree with all service agreement.
-          <input type="checkbox" id="checkbox" checked={checkboxValue} onChange={() => setCheckboxValue(!checkboxValue)} />
-          <span className={styles.checkmark} />
-        </label>
-
-        <button type="submit">Register</button>
-      </form>
-
-      <h3 className={styles.caption}>Do you have an account? <Link href="/login">Login</Link></h3>
+      <div className={styles.background} />
     </div>
   );
 }

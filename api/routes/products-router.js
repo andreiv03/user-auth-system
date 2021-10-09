@@ -1,17 +1,12 @@
-import express from "express";
+const router = require("express").Router();
+const productsController = require("../controllers/products-controller.js");
 
-import productsController from "../controllers/products-controllers/products-controller.js";
-import auth from "../middleware/auth.js";
-import authAdmin from "../middleware/auth-admin.js";
-
-export default globalRouter => {
-  const router = express.Router();
-
+module.exports = () => {
   router.get("/products", productsController.getProducts);
-  router.post("/products", auth, authAdmin, productsController.createProduct);
+  router.post("/products", productsController.createProduct);
 
-  router.put("/products/:id", auth, authAdmin, productsController.updateProduct);
-  router.delete("/products/:id", auth, authAdmin, productsController.deleteProduct);
+  router.post("/products/:id", productsController.updateProduct);
+  router.post("/products/:id", productsController.deleteProduct);
 
-  globalRouter.use("/api", router);
+  return router;
 }

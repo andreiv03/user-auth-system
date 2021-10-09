@@ -1,20 +1,18 @@
-import express from "express";
+const router = require("express").Router();
 
-import authController from "../controllers/users-controllers/auth-controller.js";
-import accountController from "../controllers/users-controllers/account-controller.js";
-import auth from "../middleware/auth.js";
+const authController = require("../controllers/auth-controller.js");
+const accountController = require("../controllers/account-controller.js");
+const auth = require("../middleware/auth.js");
 
-export default globalRouter => {
-  const router = express.Router();
-
+module.exports = () => {
   // Authentication
   router.post("/register", authController.register);
   router.post("/login", authController.login);
   router.get("/logout", authController.logout);
   router.get("/refresh-token", authController.refreshToken);
 
-  // User's account
+  // User Account
   router.get("/account", auth, accountController.getUser);
 
-  globalRouter.use("/api", router);
+  return router;
 }

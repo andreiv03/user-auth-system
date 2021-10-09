@@ -3,10 +3,12 @@ import type { AppProps } from "next/app";
 import "../styles/globals.scss";
 import Layout from "../components/Layout";
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+const App = ({ Component, pageProps }: AppProps): JSX.Element => {
   return (
     <Layout>
       <Component {...pageProps} />
     </Layout>
   );
 }
+
+export default App;

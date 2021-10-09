@@ -1,17 +1,25 @@
-import express from "express";
+const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const fileUpload = require("express-fileupload");
 
-import config from "./config/config.js";
-import connectExpressServer from "./connections/express.js";
-import connectMongoose from "./connections/mongoose.js";
+const config = require("./config/config.js");
+const globalRouter = require("./api/helpers/global-router.js");
+const handleMongooseConnection = require("./connections/mongoose.js");
 
-async function startServer() {
-  const app = express();
+function startServer() {
+  const server = express();
 
-  connectExpressServer(app);
-  connectMongoose();
+  server.use(express.json());
+  server.use(cors({ credentials: true, origin: config.clientURL }));
+  server.use(cookieParser());
+  server.use(fileUpload({ useTempFiles: true }));
+  server.use(globalRouter());
 
-  app.listen(config.port, () => {
-    console.log("Server is running on port", config.port);
+  handleMongooseConnection();
+
+  server.listen(config.port, () => {
+    console.log(`Server is running on port ${config.port}`);
   }).on("error", () => process.exit(1));
 }
 

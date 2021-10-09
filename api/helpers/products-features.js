@@ -1,7 +1,7 @@
 export default class Features {
-  constructor(query, queryString) {
+  constructor(products, query) {
+    this.products = products;
     this.query = query;
-    this.queryString = queryString;
   }
 
   filtering() {
@@ -17,6 +17,7 @@ export default class Features {
 
     this.query.find(JSON.parse(queryStr));
     if (queryObjectAttributes) this.query.find({ attributes: { $all: queryObjectAttributes } });
+
     return this;
   }
 

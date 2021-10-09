@@ -1,18 +1,21 @@
-import mongoose from "mongoose";
-import config from "../config/config.js";
+const mongoose = require("mongoose");
+const config = require("../config/config.js");
 
-export default () => {
+module.exports = () => {
   const URI = config.mongodbURI;
   const options = {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
+    autoIndex: false,
+    connectTimeoutMS: 30000,
+    socketTimeoutMS: 30000 * 3,
+    serverSelectionTimeoutMS: 10000,
+    heartbeatFrequencyMS: 1500
   };
 
-  mongoose.connect(URI, options, error => {
+  mongoose.connect(URI, options).catch(error => {
     if (error) throw error;
   });
+
+  mongoose.Promise = global.Promise;
 
   mongoose.connection.on("connected", () => console.log("Mongoose has successfully connected!"));
   mongoose.connection.on("error", error => console.error(`Mongoose connection error:\n${error.stack}`));

@@ -1,7 +1,7 @@
-import jwt from "jsonwebtoken";
-import config from "../../config/config.js";
+const jwt = require("jsonwebtoken");
+const config = require("../../config/config.js");
 
-export default (req, res, next) => {
+module.exports = (req, res, next) => {
   try {
     const token = req.header("Authorization");
     if (!token) return res.status(400).json({ message: "Invalid authentication!" });
@@ -11,7 +11,7 @@ export default (req, res, next) => {
       req.user = user;
     });
 
-    return next();
+    next();
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

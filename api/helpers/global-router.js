@@ -1,11 +1,9 @@
-import express from "express";
+const globalRouter = require("express").Router();
 
-import usersRouter from "../routes/users-router.js";
+const usersRouter = require("../routes/users-router.js");
 
-export default () => {
-  const globalRouter = express.Router();
-  
-  usersRouter(globalRouter);
+module.exports = () => {
+  globalRouter.use("/api", usersRouter());
 
   return globalRouter;
 }

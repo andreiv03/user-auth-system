@@ -1,16 +1,13 @@
-import { ReactNode } from "react";
+import React from "react";
 
 import styles from "../styles/components/layout.module.scss";
+import UsersContextProvider from "../contexts/UsersContext";
 
-type Props = {
-  children: ReactNode;
-};
-
-const Layout = ({ children }: Props): JSX.Element => {
+const Layout: React.FC = ({ children }) => {
   return (
-    <>
+    <UsersContextProvider>
       <div className={styles.page}>{children}</div>
-    </>
+    </UsersContextProvider>
   );
 }
 
