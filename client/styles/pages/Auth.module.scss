@@ -4,47 +4,60 @@
   .content {
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
     width: 600px;
     min-height: 100vh;
-    margin: 0 auto;
-    padding: 2rem 100px;
+    padding: 3rem 100px;
 
-    .top_section {
-      width: 100%;
-
-      .title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 0.2em;
-      }
-
-      .subtitle {
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: var(--grey);
-      }
+    .title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
     }
 
-    .bottom_section {
-      .caption {
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: var(--grey);
-        margin-top: 1rem;
+    .paragraph {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--foreground-two);
+
+      &:not(:first-of-type):not(:last-of-type) {
+        margin-bottom: 0.2rem;
+      }
+
+      &:not(:first-of-type) {
+        text-align: center;
 
         a {
-          color: var(--accent);
+          color: var(--foreground-one);
           text-transform: uppercase;
-          letter-spacing: 1px;
           text-decoration: none;
           font-weight: 600;
           transition: 100ms ease-in;
-        }
 
-        a:hover {
-          color: var(--dark-accent);
+          &:hover {
+            color: var(--accent);
+          }
+        }
+      }
+    }
+
+    .caption {
+      font-size: 0.6rem;
+      font-weight: 500;
+      color: var(--foreground-two);
+      text-align: center;
+      max-width: 300px;
+      margin: 1rem auto 0;
+
+      a {
+        color: var(--foreground-one);
+        text-transform: uppercase;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 100ms ease-in;
+
+        &:hover {
+          color: var(--accent);
         }
       }
     }
@@ -53,234 +66,168 @@
       display: flex;
       flex-direction: column;
       width: 100%;
-      margin-top: 2rem;
+      margin: 2rem 0;
 
       .field {
         position: relative;
         width: 100%;
-        height: 3.5rem;
+        height: 3.75rem;
 
         &:not(:last-of-type) {
           margin-bottom: 0.75rem;
         }
 
         input {
-          position: absolute;
-          top: 0;
-          left: 0;
           width: 100%;
           height: 100%;
           font-size: 1rem;
-          font-weight: 500;
-          background: white;
-          padding: 0.75rem 1rem 0;
-          border-radius: 5px;
+          font-weight: 600;
+          background: var(--background-two);
+          padding: 1rem 1.75rem 0;
+          border-radius: 2rem;
 
           &[name="password"] {
-            padding-right: 4.5rem;
-          }
-
-          &:-webkit-autofill,
-          &:-webkit-autofill:hover,
-          &:-webkit-autofill:focus,
-          &:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0 30px white inset !important;
+            padding-right: 6rem;
           }
         }
 
         label {
           position: absolute;
           top: 50%;
-          left: 1rem;
+          left: 1.75rem;
           transform: translateY(-50%);
           pointer-events: none;
-          cursor: text;
-          color: var(--grey);
           font-size: 1rem;
-          font-weight: 500;
-          transition: top 100ms ease-in, transform 100ms ease-in,
-            font-size 100ms ease-in;
+          font-weight: 600;
           user-select: none;
+          transition: 100ms ease-in;
+
+          .weak {
+            color: var(--error);
+          }
+
+          .medium {
+            color: var(--warning);
+          }
+
+          .strong {
+            color: var(--valid);
+          }
         }
 
         input:focus ~ label,
         input:not(:placeholder-shown):not(:focus) ~ label {
-          top: 0.5rem;
+          top: 0.75rem;
           transform: unset;
           font-size: 0.6rem;
+          font-weight: 500;
+          color: var(--foreground-two);
         }
 
-        &::after {
-          content: "";
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 3px;
-          background: var(--grey);
-          border-bottom-left-radius: 5px;
-          border-bottom-right-radius: 5px;
-          transition: height 100ms 300ms ease-in,
-            border-radius 100ms 300ms ease-in;
+        input[name="password"] ~ .validity {
+          transition: 100ms ease-in;
         }
 
-        &.valid::after {
-          background: var(--valid);
-        }
-
-        &.valid label {
-          color: var(--valid);
-        }
-
-        &.error::after {
-          background: var(--error);
-        }
-
-        &.error label {
-          color: var(--error);
-        }
-
-        &.warning::after {
-          background: var(--warning);
-        }
-
-        &.warning label {
-          color: var(--warning);
-        }
-
-        .show_button,
-        .info_button {
-          cursor: pointer;
-          color: var(--grey);
-          font-size: 1.1rem;
+        .validity {
           position: absolute;
           top: 50%;
-          right: 1rem;
-          z-index: 10;
+          right: 1.75rem;
+          transform: translateY(-50%);
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+
+          &.false {
+            background: var(--error);
+
+            &::before {
+              content: "";
+              position: absolute;
+              top: 3.5px;
+              bottom: 3.5px;
+              left: 6.5px;
+              width: 2px;
+              transform: rotate(45deg);
+              background: var(--background-two);
+            }
+
+            &::after {
+              content: "";
+              position: absolute;
+              top: 3.5px;
+              bottom: 3.5px;
+              left: 6.5px;
+              width: 2px;
+              transform: rotate(-45deg);
+              background: var(--background-two);
+            }
+          }
+
+          &.true {
+            background: var(--valid);
+
+            &::before {
+              content: "";
+              position: absolute;
+              top: 3.5px;
+              left: 5.5px;
+              transform: rotate(45deg);
+              height: 7px;
+              width: 4px;
+              border-bottom: 2px solid var(--background-two);
+              border-right: 2px solid var(--background-two);
+            }
+          }
+
+          &.weak {
+            background: var(--error);
+          }
+
+          &.medium {
+            background: var(--warning);
+          }
+
+          &.strong {
+            background: var(--valid);
+          }
+        }
+
+        .validity.weak ~ .show_button,
+        .validity.medium ~ .show_button,
+        .validity.strong ~ .show_button {
+          right: 3.5rem;
+        }
+
+        .show_button {
+          cursor: pointer;
+          color: var(--foreground-one);
+          font-size: 1.25rem;
+          position: absolute;
+          top: 50%;
+          right: 1.6rem;
           transform: translateY(-50%);
           display: flex;
           justify-content: center;
           align-items: center;
-          transition: 100ms 300ms ease-in;
-        }
-
-        .info_button {
-          right: 2.75rem;
-        }
-
-        .info_text {
-          position: absolute;
-          top: 50%;
-          left: 1rem;
-          right: 5rem;
-          z-index: 10;
-          transform: translateY(-50%);
-          font-size: 0.6rem;
-          font-weight: 500;
-          color: var(--background);
-          opacity: 0;
-          user-select: none;
-          visibility: hidden;
           transition: 100ms ease-in;
-        }
-
-        &.tooltip_active {
-          &::after {
-            height: 100%;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
-            transition: height 100ms ease-in, border-radius 100ms ease-in;
-          }
-
-          .show_button {
-            opacity: 0.5;
-            cursor: not-allowed;
-          }
-
-          .show_button,
-          .info_button {
-            color: var(--background);
-            transition: 100ms ease-in;
-          }
-
-          .info_text {
-            opacity: 1;
-            visibility: visible;
-            transition: 100ms 300ms ease-in;
-          }
-        }
-      }
-
-      .checkbox {
-        display: block;
-        position: relative;
-        padding-left: 25px;
-        margin-top: 1rem;
-        cursor: pointer;
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: var(--grey);
-        width: fit-content;
-
-        input {
-          position: absolute;
-          opacity: 0;
-          cursor: pointer;
-          height: 0;
-          width: 0;
-        }
-
-        .checkmark {
-          position: absolute;
-          top: 50%;
-          left: 0;
-          transform: translateY(-50%);
-          height: 15px;
-          width: 15px;
-          border-radius: 50%;
-          background-color: var(--grey);
-
-          &::after {
-            content: "";
-            position: absolute;
-            display: none;
-            left: 5.5px;
-            top: 3.2px;
-            width: 4px;
-            height: 7px;
-            border: solid white;
-            border-width: 0 2px 2px 0;
-            -webkit-transform: rotate(45deg);
-            -ms-transform: rotate(45deg);
-            transform: rotate(45deg);
-          }
-        }
-
-        input:checked ~ .checkmark {
-          background-color: var(--valid);
-        }
-
-        input:checked ~ .checkmark::after {
-          display: block;
         }
       }
 
       button {
         width: 100%;
-        height: 3rem;
+        height: 3.75rem;
         margin-top: 1rem;
         text-align: center;
-        background: var(--accent);
-        color: var(--background);
-        border-radius: 5px;
+        background: var(--foreground-one);
+        color: var(--background-one);
+        border-radius: 2rem;
         cursor: pointer;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        font-weight: 600;
+        text-transform: capitalize;
         transition: 100ms ease-in;
 
         &:hover {
-          background: var(--dark-accent);
+          background: var(--accent);
         }
       }
     }

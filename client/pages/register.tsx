@@ -1,119 +1,110 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { RiEyeFill, RiEyeOffFill, RiInformationFill } from "react-icons/ri";
+import { useState, useContext } from "react";
+import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
+
+import AuthService from "../services/AuthService";
+import { UsersContext } from "../contexts/UsersContext";
+import { RegisterFormDataInterface as FormData } from "../interfaces/AuthInterfaces";
 
 import styles from "../styles/pages/auth.module.scss";
-import AuthService from "../services/AuthService";
+import NotFound from "../components/NotFound";
 
-export interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-};
-
-interface FormErrors {
-  firstName: boolean;
-  lastName: boolean;
-  email: boolean;
-  password: string;
+const formDataInitialState: FormData = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: ""
 };
 
 const Register: NextPage = () => {
-  const [formData, setFormData] = useState<FormData>({ firstName: "", lastName: "", email: "", password: "" });
-  const [formErrors, setFormErrors] = useState<FormErrors>({ firstName: true, lastName: true, email: true, password: "" });
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showTooltip, setShowTooltip] = useState<boolean>(false);
-  const [isChecked, setIsChecked] = useState<boolean>(false);
-
   const router = useRouter();
+  const { token: [, setToken], isLoggedIn } = useContext(UsersContext);
 
-  const handleFormErros = (name: string, value: string): (boolean | string) => {
-    if (name === "firstName" || name === "lastName") return value.length < 3;
-    else if (name === "email") return !AuthService.validateEmail(value);
-    else return AuthService.passwordStrength(value);
-  }
+  const [formData, setFormData] = useState<FormData>(formDataInitialState);
+  const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
+  const [passwordStrength, setPasswordStrength] = useState<string>("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
-  const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setFormData({
-      ...formData,
+  const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.name === "email")
+      setIsEmailValid(AuthService.checkEmailValidity(event.target.value));
+
+    else if (event.target.name === "password")
+      setPasswordStrength(AuthService.checkPasswordStrength(event.target.value));
+
+    setFormData(prevState => ({
+      ...prevState,
       [event.target.name]: event.target.value
-    });
-
-    setFormErrors({
-      ...formErrors,
-      [event.target.name]: handleFormErros(event.target.name, event.target.value)
-    });
+    }));
   }
 
-  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
       if (!formData.firstName || !formData.lastName || !formData.email || !formData.password)
         return alert("Please fill in all the fields!");
 
-      else if (formErrors.firstName || formErrors.lastName || formErrors.email)
-        return alert(`"First Name", "Last Name" and "Email" fields must have valid values before you can register!`);
+      else if (!isEmailValid)
+        return alert("Please use a valid email address!");
 
-      await AuthService.register(formData);
+      else if (passwordStrength === "Weak")
+        return alert("Your password is too weak!");
 
-      localStorage.setItem("firstLogin", "true");
+      const { data } = await AuthService.register(formData);
+
+      setToken(data.accessToken);
+      localStorage.setItem("isLoggedIn", "true");
+      
       router.push("/");
     } catch (error: any) {
-      return alert(error.response.data.message);
+      return alert(error.response?.data.message);
     }
   }
+
+  if (isLoggedIn)
+    return <NotFound />
 
   return (
     <div className={styles.page}>
       <div className={styles.content}>
-        <div className={styles.top_section}>
-          <h1 className={styles.title}>Register to WEBSITE</h1>
-          <h3 className={styles.subtitle}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse in commodo libero.</h3>
-        </div>
+        <h1 className={styles.title}>Create an account</h1>
+        <h3 className={styles.paragraph}>Let's get you all set up so you can verify your personal account and begin setting up your profile.</h3>
       
         <form className={styles.form} onSubmit={handleFormSubmit} noValidate>
-          <div className={!formData.firstName ? styles.field : `${styles.field} ${formErrors.firstName ? styles.error : styles.valid}`}>
+          <div className={styles.field}>
             <input type="text" id="firstName" name="firstName" autoComplete="given-name" placeholder=" " value={formData.firstName} onChange={handleFormDataChange} />
             <label htmlFor="firstName">First Name</label>
           </div>
 
-          <div className={!formData.lastName ? styles.field : `${styles.field} ${formErrors.lastName ? styles.error : styles.valid}`}>
+          <div className={styles.field}>
             <input type="text" id="lastName" name="lastName" autoComplete="family-name" placeholder=" " value={formData.lastName} onChange={handleFormDataChange} />
             <label htmlFor="lastName">Last Name</label>
           </div>
 
-          <div className={!formData.email ? styles.field : `${styles.field} ${formErrors.email ? styles.error : styles.valid}`}>
+          <div className={styles.field}>
             <input type="email" id="email" name="email" autoComplete="email" placeholder=" " value={formData.email} onChange={handleFormDataChange} />
             <label htmlFor="email">Email</label>
+
+            <div className={`${styles.validity} ${formData.email ? (isEmailValid ? styles.true : styles.false) : ""}`} />
           </div>
 
-          <div className={`${!formData.password ? styles.field : `${styles.field} ${formErrors.password === "Weak" ? styles.error : formErrors.password === "Medium" ? styles.warning : styles.valid}`} ${showTooltip ? styles.tooltip_active : ""}`}>
-            <input type={showPassword ? "text" : "password"} id="password" name="password" autoComplete="new-password" placeholder=" " value={formData.password} onChange={handleFormDataChange} />
-            <label htmlFor="password">Password{formData.password && <span> ({formErrors.password})</span>}</label>
-            
-            <p className={styles.info_text}>You can create an account even if the password is weak, but it will be poorly secured.</p>
+          <div className={styles.field}>
+            <input type={isPasswordVisible ? "text" : "password"} id="password" name="password" autoComplete="new-password" placeholder=" " value={formData.password} onChange={handleFormDataChange} />
+            <label htmlFor="password">Password{formData.password && <span className={`${formData.password ? (passwordStrength === "Weak" ? styles.weak : passwordStrength === "Medium" ? styles.medium : styles.strong) : ""}`}> ({passwordStrength})</span>}</label>
 
-            <div className={styles.show_button} onClick={() => !showTooltip && setShowPassword(!showPassword)}>{showPassword ? <RiEyeOffFill /> : <RiEyeFill />}</div>
-            <div className={styles.info_button} onClick={() => setShowTooltip(!showTooltip)}><RiInformationFill /></div>
+            <div className={`${styles.validity} ${formData.password ? (passwordStrength === "Weak" ? styles.weak : passwordStrength === "Medium" ? styles.medium : styles.strong) : ""}`} />
+            <div className={styles.show_button} onClick={() => setIsPasswordVisible(!isPasswordVisible)}>{isPasswordVisible ? <RiEyeOffFill /> : <RiEyeFill />}</div>
           </div>
 
-          <label className={styles.checkbox} htmlFor="checkbox">
-            <span>I agree with all service agreement.</span>
-
-            <input type="checkbox" id="checkbox" checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
-            <span className={styles.checkmark} />
-          </label>
-
-          <button type="submit">Register</button>
+          <button type="submit">Sign up</button>
         </form>
 
-        <div className={styles.bottom_section}>
-          <h3 className={styles.caption}>Do you have an account? <Link href="/login">Login</Link></h3>
-        </div>
+        <h3 className={styles.paragraph}>Already have an account? <Link href="/login">Sign in</Link></h3>
+        <h3 className={styles.paragraph}>Go back <Link href="/">Home</Link></h3>
+        <h4 className={styles.caption}>By creating an account you agree to the <Link href="/">Terms and Conditions</Link> and <Link href="/">Privacy Policy</Link></h4>
       </div>
 
       <div className={styles.background} />

@@ -1,9 +1,7 @@
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 
-const config = require("../../config/config.js");
-const Users = require("../../models/users-model.js");
-const { createAccessToken, createRefreshToken } = require("../helpers/tokens.js");
+const { Users } = require("../models");
+const { token } = require("../helpers");
 
 module.exports = {
   register: async (req, res) => {
@@ -23,11 +21,11 @@ module.exports = {
 
       await newUser.save();
 
-      const accessToken = createAccessToken({ id: newUser._id });
-      const refreshToken = createRefreshToken({ id: newUser._id });
+      const accessToken = await token.signToken(newUser._id, "10m");
+      const refreshToken = await token.signToken(newUser._id, "7d");
 
       res.cookie("refreshToken", refreshToken, {
-        path: "/api/refresh-token",
+        path: "/api/auth/refresh-token",
         maxAge: 1000 * 60 * 60 * 24 * 7,
         httpOnly: true,
         sameSite: "None",
@@ -44,16 +42,16 @@ module.exports = {
       const { email, password } = req.body;
 
       const user = await Users.findOne({ email });
-      if (!user) return res.status(400).json({ message: "This user does not exist." });
+      if (!user) return res.status(400).json({ message: "The user does not exist." });
 
       const match = await bcrypt.compare(password, user.password);
       if (!match) return res.status(400).json({ message: "The password is incorrect." });
 
-      const accessToken = createAccessToken({ id: user._id });
-      const refreshToken = createRefreshToken({ id: user._id });
+      const accessToken = await token.signToken(user._id, "10m");
+      const refreshToken = await token.signToken(user._id, "7d");
 
       res.cookie("refreshToken", refreshToken, {
-        path: "/api/refresh-token",
+        path: "/api/auth/refresh-token",
         maxAge: 1000 * 60 * 60 * 24 * 7,
         httpOnly: true,
         sameSite: "None",
@@ -68,7 +66,7 @@ module.exports = {
   logout: (req, res) => {
     try {
       res.clearCookie("refreshToken", {
-        path: "/api/refresh-token"
+        path: "/api/auth/refresh-token"
       });
 
       return res.json({ message: "You have successfully logged out!" });
@@ -76,19 +74,18 @@ module.exports = {
       return res.status(500).json({ message: error.message });
     }
   },
-  refreshToken: (req, res) => {
+  refreshToken: async (req, res) => {
     try {
       const refreshToken = req.cookies.refreshToken;
       if (!refreshToken) return res.status(400).json({ message: "You must log in before doing this!" });
 
-      jwt.verify(refreshToken, config.refreshToken, (error, user) => {
-        if (error) return res.status(400).json({ message: "You must log in before doing this!" });
+      const decodedToken = await token.verifyToken(refreshToken);
+      if (!decodedToken) return res.status(400).json({ message: "You must log in before doing this!" });
 
-        const accessToken = createAccessToken({ id: user.id });
-        res.json({ accessToken });
-      });
+      const accessToken = await token.signToken(decodedToken.sub, "10m");
+      return res.json({ accessToken });
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
   }
-}
+};

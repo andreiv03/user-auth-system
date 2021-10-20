@@ -22,6 +22,11 @@ const usersSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  phoneNumber: {
+    type: String,
+    trim: true,
+    default: ""
+  },
   cart: {
     type: Array,
     default: []

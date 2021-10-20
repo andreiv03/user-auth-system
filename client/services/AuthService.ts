@@ -1,44 +1,40 @@
-import http from "./http-common";
-import { FormData as RegisterFormData } from "../pages/register";
-import { FormData as LoginFormData } from "../pages/login";
-
-type RefreshTokenType = {
-  accessToken: string
-};
+import axios from "./AxiosSettings";
+import { RegisterFormDataInterface, LoginFormDataInterface, AuthResponseInterface, RefreshTokenResponseInterface } from "../interfaces/AuthInterfaces";
 
 class AuthService {
   // APIs
-  register(data: RegisterFormData) {
-    return http.post("/register", data);
+  register(data: RegisterFormDataInterface) {
+    return axios.post<AuthResponseInterface>("/auth/register", data);
   }
 
-  login(data: LoginFormData) {
-    return http.post("/login", data);
+  login(data: LoginFormDataInterface) {
+    return axios.post<AuthResponseInterface>("/auth/login", data);
   }
 
   logout() {
-    return http.get("/logout");
+    return axios.get<null>("/auth/logout");
   }
 
   refreshToken() {
-    return http.get<RefreshTokenType>("/refresh-token");
+    return axios.get<RefreshTokenResponseInterface>("/auth/refresh-token");
   }
 
   // Helpers
-  validateEmail(email: string) {
-    return email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+  checkEmailValidity(email: string) {
+    const result = email.match(/^[\S^@]+@+[\S^@]+\.+[\S^@]+$/);
+    return result ? true : false;
   }
 
-  passwordStrength(password: string) {
-    const length: number = password.length;
-    let complexity: number = 0;
+  checkPasswordStrength(password: string) {
+    const length = password.length;
+    let complexity = 0;
 
     if (password.match(/(?=.*[a-z])/)) complexity += 26;
     if (password.match(/(?=.*[A-Z])/)) complexity += 26;
     if (password.match(/(?=.*[0-9])/)) complexity += 10;
     if (password.match(/([!-\/:-@[-`{-~])/)) complexity += 32;
 
-    const strength: number = Math.floor(Math.log(Math.pow(complexity, length)) / Math.log(2));
+    const strength = Math.floor(Math.log(Math.pow(complexity, length)) / Math.log(2));
 
     if (strength > 100) return "Very Strong";
     else if (strength > 75) return "Strong";

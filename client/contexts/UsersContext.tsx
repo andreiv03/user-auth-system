@@ -2,41 +2,46 @@ import React, { createContext, useState, useEffect } from "react";
 
 import AuthService from "../services/AuthService";
 import UsersService from "../services/UsersService";
-
-interface UsersInterface {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-};
+import { UsersInterface } from "../interfaces/UsersInterfaces";
 
 interface ProviderStateInterface {
   token: [string, React.Dispatch<React.SetStateAction<string>>];
-  isLogged: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  isAdmin: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  user: [UsersInterface | {}, React.Dispatch<React.SetStateAction<UsersInterface | {}>>];
+  callback: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+  isLoggedIn: boolean;
+  isAdmin: boolean;
+  user: UsersInterface;
 };
 
-const UsersContext: React.Context<ProviderStateInterface | null> = createContext<ProviderStateInterface | null>(null);
+const userInitialState: UsersInterface = {
+  _id: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  phoneNumber: "",
+  avatarUrl: ""
+};
+
+export const UsersContext = createContext<ProviderStateInterface>({} as ProviderStateInterface);
 
 const UsersContextProvider: React.FC = ({ children }) => {
   const [token, setToken] = useState<string>("");
-  const [isLogged, setIsLogged] = useState<boolean>(false);
+  const [callback, setCallback] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
-  const [user, setUser] = useState<UsersInterface | {}>({});
+  const [user, setUser] = useState<UsersInterface>(userInitialState);
 
   useEffect(() => {
-    const firstLogin: string | null = localStorage.getItem("firstLogin");
+    const isLoggedInValue = localStorage.getItem("isLoggedIn");
 
-    if (firstLogin) {
-      const getAccesToken = async (): Promise<void> => {
+    if (isLoggedInValue) {
+      const getAccesToken = async () => {
         try {
           const { data } = await AuthService.refreshToken();
           setToken(data.accessToken);
 
-          setTimeout(() => getAccesToken, 10 * 60 * 1000);
+          setTimeout(() => getAccesToken, 1000 * 60 * 10);
         } catch (error: any) {
-          return alert(error.response.data.message);
+          return alert(error.response?.data.message);
         }
       }
 
@@ -46,33 +51,36 @@ const UsersContextProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      const getUser = async (): Promise<void> => {
+      const getUser = async () => {
         try {
           const { data } = await UsersService.getUser(token);
           
-          setIsLogged(true);
+          setIsLoggedIn(true);
           if (UsersService.isAdmin(data.email)) setIsAdmin(true);
 
           setUser({
-            id: data._id,
+            _id: data._id,
             firstName: data.firstName,
             lastName: data.lastName,
-            email: data.email
+            email: data.email,
+            phoneNumber: data.phoneNumber,
+            avatarUrl: data.avatarUrl
           });
         } catch (error: any) {
-          return alert(error.response.data.message);
+          return alert(error.response?.data.message);
         }
       }
 
       getUser();
     }
-  }, [token]);
+  }, [token, callback]);
 
   const state: ProviderStateInterface = {
     token: [token, setToken],
-    isLogged: [isLogged, setIsLogged],
-    isAdmin: [isAdmin, setIsAdmin],
-    user: [user, setUser]
+    callback: [callback, setCallback],
+    isLoggedIn,
+    isAdmin,
+    user
   };
 
   return (
