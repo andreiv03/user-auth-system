@@ -12,14 +12,12 @@ module.exports = {
       if (user) return res.status(400).json({ message: "This email address has already been registered." });
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = new Users({
+      const newUser = await Users.create({
         firstName,
         lastName,
         email,
         password: hashedPassword
       });
-
-      await newUser.save();
 
       const accessToken = await token.signToken(newUser._id, "10m");
       const refreshToken = await token.signToken(newUser._id, "7d");
