@@ -8,19 +8,14 @@ import Header from "./Header";
 
 const Layout: React.FC = ({ children }) => {
   const router = useRouter();
-  
-  if (router.pathname === "/register" || router.pathname === "/login") {
-    return (
-      <UsersContextProvider>
-        <div className={styles.page}>{children}</div>
-      </UsersContextProvider>
-    );
-  }
+  const isAuthPathname = router.pathname !== "/register" && router.pathname !== "/login";
 
   return (
     <UsersContextProvider>
       <ProductsContextProvider>
-        <Header />
+        {isAuthPathname && (
+          <Header />
+        )}
         <div className={styles.page}>{children}</div>
       </ProductsContextProvider>
     </UsersContextProvider>

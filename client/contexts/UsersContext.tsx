@@ -17,8 +17,7 @@ const userInitialState: UsersInterface = {
   firstName: "",
   lastName: "",
   email: "",
-  phoneNumber: "",
-  avatarUrl: ""
+  phoneNumber: ""
 };
 
 export const UsersContext = createContext<ProviderStateInterface>({} as ProviderStateInterface);
@@ -63,8 +62,7 @@ const UsersContextProvider: React.FC = ({ children }) => {
             firstName: data.firstName,
             lastName: data.lastName,
             email: data.email,
-            phoneNumber: data.phoneNumber,
-            avatarUrl: data.avatarUrl
+            phoneNumber: data.phoneNumber
           });
         } catch (error: any) {
           return alert(error.response?.data.message);
@@ -72,6 +70,10 @@ const UsersContextProvider: React.FC = ({ children }) => {
       }
 
       getUser();
+    } else if (isLoggedIn) {
+      setIsLoggedIn(false);
+      setIsAdmin(false);
+      setUser(userInitialState);
     }
   }, [token, callback]);
 

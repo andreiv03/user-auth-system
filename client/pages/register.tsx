@@ -34,10 +34,7 @@ const Register: NextPage = () => {
     else if (event.target.name === "password")
       setPasswordStrength(AuthService.checkPasswordStrength(event.target.value));
 
-    setFormData(prevState => ({
-      ...prevState,
-      [event.target.name]: event.target.value
-    }));
+    setFormData(prevState => ({ ...prevState, [event.target.name]: event.target.value }));
   }
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

@@ -4,12 +4,6 @@ export interface UsersInterface {
   lastName: string;
   email: string;
   phoneNumber: string;
-  avatarUrl: string;
-};
-
-export interface FieldInterface {
-  name: string;
-  value: string;
 };
 
 export interface AccountFormDataInterface {

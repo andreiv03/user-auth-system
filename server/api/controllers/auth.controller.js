@@ -30,7 +30,7 @@ module.exports = {
         secure: true
       });
 
-      return res.json({ accessToken });
+      return res.status(200).json({ accessToken });
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
@@ -56,7 +56,7 @@ module.exports = {
         secure: true
       });
 
-      return res.json({ accessToken });
+      return res.status(200).json({ accessToken });
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
@@ -67,7 +67,7 @@ module.exports = {
         path: "/api/auth/refresh-token"
       });
 
-      return res.json({ message: "You have successfully logged out!" });
+      return res.status(200).json({ message: "You have successfully logged out!" });
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
@@ -81,7 +81,7 @@ module.exports = {
       if (!decodedToken) return res.status(400).json({ message: "You must log in before doing this!" });
 
       const accessToken = await token.signToken(decodedToken.sub, "10m");
-      return res.json({ accessToken });
+      return res.status(200).json({ accessToken });
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }

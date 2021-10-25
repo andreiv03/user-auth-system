@@ -1,5 +1,5 @@
 import axios from "./AxiosSettings";
-import { UsersInterface, FieldInterface, PasswordFormDataInterface } from "../interfaces/UsersInterfaces";
+import { UsersInterface, AccountFormDataInterface, PasswordFormDataInterface } from "../interfaces/UsersInterfaces";
 import { MessageResponseInterface } from "../interfaces/AxiosInterfaces";
 
 class UsersService {
@@ -10,14 +10,14 @@ class UsersService {
     });
   }
 
-  updateUser(token: string, id: string, field: FieldInterface) {
-    return axios.patch<MessageResponseInterface>(`/users/account/${id}`, { ...field }, {
+  updateUser(token: string, id: string, formData: AccountFormDataInterface) {
+    return axios.patch<MessageResponseInterface>(`/users/account/${id}`, { ...formData }, {
       headers: { Authorization: token }
     });
   }
 
-  changePassword(token: string, id: string, password: PasswordFormDataInterface) {
-    return axios.patch<MessageResponseInterface>(`/users/account/change-password/${id}`, { ...password, confirmPassword: undefined }, {
+  changePassword(token: string, id: string, formData: PasswordFormDataInterface) {
+    return axios.patch<MessageResponseInterface>(`/users/account/change-password/${id}`, { ...formData, confirmPassword: undefined }, {
       headers: { Authorization: token }
     });
   }

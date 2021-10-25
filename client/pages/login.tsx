@@ -23,12 +23,8 @@ const Login: NextPage = () => {
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
-  const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prevState => ({
-      ...prevState,
-      [event.target.name]: event.target.value
-    }));
-  }
+  const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement>) => 
+    setFormData(prevState => ({ ...prevState, [event.target.name]: event.target.value }));
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
