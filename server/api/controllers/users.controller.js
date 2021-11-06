@@ -12,7 +12,7 @@ module.exports = {
       return res.status(500).json({ message: error.message });
     }
   },
-  updateAccount: async (req, res) => {
+  updateUser: async (req, res) => {
     try {
       const { firstName, lastName, email, phoneNumber } = req.body;
       

@@ -1,4 +1,5 @@
 const express = require("express");
+const expressFileUpload = require("express-fileupload");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
@@ -13,6 +14,7 @@ module.exports = () => {
 
   server.use(express.json());
   server.use(express.urlencoded({ extended: true }));
+  server.use(expressFileUpload({ useTempFiles: true }));
   server.use(cors(corsOptions));
   server.use(cookieParser());
 

@@ -13,7 +13,3 @@ export interface LoginFormDataInterface {
 export interface AuthResponseInterface {
   accessToken: string;
 };
-
-export interface RefreshTokenResponseInterface {
-  accessToken: string
-};

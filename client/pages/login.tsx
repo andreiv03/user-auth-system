@@ -1,10 +1,11 @@
-import type { NextPage } from "next";
+import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
 
 import AuthService from "../services/AuthService";
+import Handlers from "../services/Handlers";
 import { UsersContext } from "../contexts/UsersContext";
 import { LoginFormDataInterface as FormData } from "../interfaces/AuthInterfaces";
 
@@ -23,9 +24,6 @@ const Login: NextPage = () => {
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
-  const handleFormDataChange = (event: React.ChangeEvent<HTMLInputElement>) => 
-    setFormData(prevState => ({ ...prevState, [event.target.name]: event.target.value }));
-
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -34,11 +32,10 @@ const Login: NextPage = () => {
         return alert("Please fill in all the fields!");
 
       const { data } = await AuthService.login(formData);
-
       setToken(data.accessToken);
-      localStorage.setItem("isLoggedIn", "true");
 
-      router.push("/");
+      localStorage.setItem("isLoggedIn", "true");
+      return router.push("/");
     } catch (error: any) {
       return alert(error.response?.data.message);
     }
@@ -55,12 +52,12 @@ const Login: NextPage = () => {
       
         <form className={styles.form} onSubmit={handleFormSubmit} noValidate>
           <div className={styles.field}>
-            <input type="email" id="email" name="email" autoComplete="email" placeholder=" " value={formData.email} onChange={handleFormDataChange} />
+            <input type="email" id="email" name="email" autoComplete="email" placeholder=" " value={formData.email} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
             <label htmlFor="email">Email</label>
           </div>
 
           <div className={styles.field}>
-            <input type={isPasswordVisible ? "text" : "password"} id="password" name="password" autoComplete="current-password" placeholder=" " value={formData.password} onChange={handleFormDataChange} />
+            <input type={isPasswordVisible ? "text" : "password"} id="password" name="password" autoComplete="current-password" placeholder=" " value={formData.password} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
             <label htmlFor="password">Password</label>
 
             <div className={styles.show_button} onClick={() => setIsPasswordVisible(!isPasswordVisible)}>{isPasswordVisible ? <RiEyeOffFill /> : <RiEyeFill />}</div>

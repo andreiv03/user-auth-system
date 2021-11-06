@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "../styles/components/not-found.module.scss";
 
 const NotFound: React.FC = () => {

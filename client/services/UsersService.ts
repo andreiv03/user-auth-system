@@ -3,7 +3,6 @@ import { UsersInterface, AccountFormDataInterface, PasswordFormDataInterface } f
 import { MessageResponseInterface } from "../interfaces/AxiosInterfaces";
 
 class UsersService {
-  // APIs
   getUser(token: string) {
     return axios.get<UsersInterface>("/users/account", {
       headers: { Authorization: token }
@@ -20,17 +19,6 @@ class UsersService {
     return axios.patch<MessageResponseInterface>(`/users/account/change-password/${id}`, { ...formData, confirmPassword: undefined }, {
       headers: { Authorization: token }
     });
-  }
-
-  // Helpers
-  isAdmin(email: string) {
-    const admins = ["andrei.voicu110@gmail.com"];
-    return admins.includes(email);
-  }
-
-  checkPhoneNumberValidity(phoneNumber: string) {
-    const result = phoneNumber.match(/^(\(\d{3}\)|\d{3})-?\d{3}-?\d{4}$/);
-    return result ? true : false;
   }
 }
 

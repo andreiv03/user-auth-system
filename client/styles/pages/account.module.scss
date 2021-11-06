@@ -118,130 +118,125 @@
     max-width: 400px;
     height: fit-content;
     overflow: auto;
+    padding: 2rem;
 
-    .container {
-      width: 100%;
-      height: 100%;
-      padding: 2rem;
+    .top_section {
+      margin-bottom: 0.5rem;
 
-      .top_section {
-        margin-bottom: 0.5rem;
+      h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-transform: capitalize;
+      }
+    }
 
-        h2 {
-          font-size: 1.5rem;
-          font-weight: 700;
+    form {
+      display: flex;
+      flex-direction: column;
+
+      .field {
+        label {
+          margin-bottom: 0.5rem;
+          font-size: 0.8rem;
+          font-weight: 600;
           text-transform: capitalize;
+          display: inline-block;
+        }
+
+        input {
+          width: 100%;
+          padding: 0.75rem 1.5rem;
+          border-radius: 2rem;
+          font-size: 0.8rem;
+          font-weight: 500;
+          color: var(--foreground-two);
+          background: var(--background-two);
+        }
+
+        &:not(:last-of-type) {
+          margin-bottom: 1rem;
+        }
+
+        &.active {
+          input {
+            color: var(--foreground-one);
+          }
+        }
+
+        .input_container {
+          position: relative;
+        }
+
+        .validity {
+          position: absolute;
+          top: 50%;
+          right: 1.5rem;
+          transform: translateY(-50%);
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+          pointer-events: none;
+
+          &.false {
+            background: var(--error);
+
+            &::before {
+              content: "";
+              position: absolute;
+              top: 3.5px;
+              bottom: 3.5px;
+              left: 6.5px;
+              width: 2px;
+              transform: rotate(45deg);
+              background: var(--background-two);
+            }
+
+            &::after {
+              content: "";
+              position: absolute;
+              top: 3.5px;
+              bottom: 3.5px;
+              left: 6.5px;
+              width: 2px;
+              transform: rotate(-45deg);
+              background: var(--background-two);
+            }
+          }
+
+          &.true {
+            background: var(--valid);
+
+            &::before {
+              content: "";
+              position: absolute;
+              top: 3.5px;
+              left: 5.5px;
+              transform: rotate(45deg);
+              height: 7px;
+              width: 4px;
+              border-bottom: 2px solid var(--background-two);
+              border-right: 2px solid var(--background-two);
+            }
+          }
         }
       }
 
-      form {
-        display: flex;
-        flex-direction: column;
+      button {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        margin-top: 1rem;
+        text-align: center;
+        background: var(--foreground-one);
+        color: var(--background-one);
+        border-radius: 2rem;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 0.8rem;
+        text-transform: capitalize;
+        transition: 100ms ease-in;
 
-        .field {
-          label {
-            margin-bottom: 0.5rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: capitalize;
-            display: inline-block;
-          }
-
-          input {
-            width: 100%;
-            padding: 0.75rem 1.5rem;
-            border-radius: 2rem;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--foreground-two);
-            background: var(--background-two);
-          }
-
-          &:not(:last-of-type) {
-            margin-bottom: 1rem;
-          }
-
-          &.active {
-            input {
-              color: var(--foreground-one);
-            }
-          }
-
-          .input_container {
-            position: relative;
-          }
-
-          .validity {
-            position: absolute;
-            top: 50%;
-            right: 1.5rem;
-            transform: translateY(-50%);
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            pointer-events: none;
-
-            &.false {
-              background: var(--error);
-
-              &::before {
-                content: "";
-                position: absolute;
-                top: 3.5px;
-                bottom: 3.5px;
-                left: 6.5px;
-                width: 2px;
-                transform: rotate(45deg);
-                background: var(--background-two);
-              }
-
-              &::after {
-                content: "";
-                position: absolute;
-                top: 3.5px;
-                bottom: 3.5px;
-                left: 6.5px;
-                width: 2px;
-                transform: rotate(-45deg);
-                background: var(--background-two);
-              }
-            }
-
-            &.true {
-              background: var(--valid);
-
-              &::before {
-                content: "";
-                position: absolute;
-                top: 3.5px;
-                left: 5.5px;
-                transform: rotate(45deg);
-                height: 7px;
-                width: 4px;
-                border-bottom: 2px solid var(--background-two);
-                border-right: 2px solid var(--background-two);
-              }
-            }
-          }
-        }
-
-        button {
-          width: 100%;
-          padding: 0.75rem 1.5rem;
-          margin-top: 1rem;
-          text-align: center;
-          background: var(--foreground-one);
-          color: var(--background-one);
-          border-radius: 2rem;
-          cursor: pointer;
-          font-weight: 500;
-          font-size: 0.8rem;
-          text-transform: capitalize;
-          transition: 100ms ease-in;
-
-          &:hover {
-            background: var(--accent);
-          }
+        &:hover {
+          background: var(--accent);
         }
       }
     }

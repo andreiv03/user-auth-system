@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 
 const { Users } = require("../models");
 const { token } = require("../helpers");
+const { ADMINS } = require("../../constants");
 
 module.exports = {
   register: async (req, res) => {
@@ -16,7 +17,8 @@ module.exports = {
         firstName,
         lastName,
         email,
-        password: hashedPassword
+        password: hashedPassword,
+        isAdmin: ADMINS.includes(email)
       });
 
       const accessToken = await token.signToken(newUser._id, "10m");

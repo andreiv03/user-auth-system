@@ -1,5 +1,5 @@
 export interface ProductsInterface {
-  _id?: string;
+  _id: string;
   sku: string;
   name: string;
   description: string;
@@ -7,8 +7,10 @@ export interface ProductsInterface {
   category: string;
 };
 
-export interface CategoriesInterface {
-  _id?: string;
+export interface ProductFormDataInterface {
+  sku: string;
   name: string;
-  parent: string;
+  description: string;
+  price: string;
+  category: string;
 };

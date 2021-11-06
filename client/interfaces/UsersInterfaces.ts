@@ -4,6 +4,7 @@ export interface UsersInterface {
   lastName: string;
   email: string;
   phoneNumber: string;
+  isAdmin: boolean;
 };
 
 export interface AccountFormDataInterface {

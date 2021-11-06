@@ -24,7 +24,7 @@ module.exports = {
         description,
         price,
         category,
-        image: {}
+        image
       });
 
       return res.status(200).json({ message: "The product has been created." });
