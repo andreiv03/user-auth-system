@@ -1,5 +1,5 @@
 import axios from "./AxiosSettings";
-import { CategoriesInterface } from "../interfaces/CategoriesInterfaces";
+import { CategoriesInterface, CategoryFormDataInterface } from "../interfaces/CategoriesInterfaces";
 import { MessageResponseInterface } from "../interfaces/AxiosInterfaces";
 
 class CategoriesService {
@@ -7,14 +7,14 @@ class CategoriesService {
     return axios.get<CategoriesInterface[]>("/categories");
   }
 
-  createCategory(token: string, formData: CategoriesInterface) {
-    return axios.post<MessageResponseInterface>("/categories", { ...formData, _id: undefined }, {
+  createCategory(token: string, formData: CategoryFormDataInterface) {
+    return axios.post<MessageResponseInterface>("/categories", formData, {
       headers: { Authorization: token }
     });
   }
 
-  updateCategory(token: string, formData: CategoriesInterface) {
-    return axios.patch<MessageResponseInterface>(`/categories/${formData._id}`, { ...formData, _id: undefined }, {
+  updateCategory(token: string, id: string, formData: CategoryFormDataInterface) {
+    return axios.patch<MessageResponseInterface>(`/categories/${id}`, formData, {
       headers: { Authorization: token }
     });
   }

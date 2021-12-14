@@ -17,5 +17,4 @@ export interface AccountFormDataInterface {
 export interface PasswordFormDataInterface {
   currentPassword: string;
   newPassword: string;
-  confirmPassword: string;
 };

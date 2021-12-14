@@ -19,8 +19,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   return (
     <UsersContextProvider>
-      <CategoriesContextProvider>
-        {isHeaderVisible && <Header />}      
+      <CategoriesContextProvider>   
         <Component {...pageProps} />
       </CategoriesContextProvider>
     </UsersContextProvider>

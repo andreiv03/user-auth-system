@@ -5,6 +5,10 @@ export interface ProductsInterface {
   description: string;
   price: string;
   category: string;
+  image: {
+    fileId: string;
+    url: string;
+  }
 };
 
 export interface ProductFormDataInterface {

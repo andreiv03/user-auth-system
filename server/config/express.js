@@ -2,6 +2,7 @@ const express = require("express");
 const expressFileUpload = require("express-fileupload");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const path = require("path");
 
 const routes = require("../api/routes");
 
@@ -19,6 +20,13 @@ module.exports = () => {
   server.use(cookieParser());
 
   server.use("/api", routes);
+
+  if (process.env.NODE_ENV === "production") {
+    app.use(express.static("client/.next"));
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(__dirname, "client", ".next"));
+    });
+  }
 
   return server;
 }

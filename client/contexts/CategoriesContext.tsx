@@ -17,7 +17,7 @@ const categoriesInitialState: CategoriesInterface[] = [{
 export const CategoriesContext = createContext<ProviderStateInterface>({} as ProviderStateInterface);
 
 export const CategoriesContextProvider: React.FC = ({ children }) => {
-  const [callback, setCallback] = useState<boolean>(false);
+  const [callback, setCallback] = useState(false);
   const [categories, setCategories] = useState<CategoriesInterface[]>(categoriesInitialState);
 
   useEffect(() => {

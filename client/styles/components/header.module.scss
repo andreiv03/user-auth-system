@@ -1,14 +1,24 @@
 .header {
-  position: relative;
+  position: sticky;
   top: 0;
   left: 0;
+  z-index: 10;
   width: 100%;
   height: var(--header-height);
   padding: 1rem 7vw;
-  display: flex;
-  justify-content: space-between;
-  background: var(--background-one);
-  box-shadow: rgba(162, 162, 162, 0.2) 0px 3px 6px;
+
+  &.fixed {
+    background: var(--background-one);
+    box-shadow: rgba(162, 162, 162, 0.2) 0px 3px 6px;
+  }
+
+  .content {
+    max-width: 1024px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+  }
 
   .container {
     display: flex;

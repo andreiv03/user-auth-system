@@ -2,12 +2,12 @@ import axios from "./AxiosSettings";
 import { RegisterFormDataInterface, LoginFormDataInterface, AuthResponseInterface } from "../interfaces/AuthInterfaces";
 
 class AuthService {
-  register(data: RegisterFormDataInterface) {
-    return axios.post<AuthResponseInterface>("/auth/register", data);
+  register(formData: RegisterFormDataInterface) {
+    return axios.post<AuthResponseInterface>("/auth/register", formData);
   }
 
-  login(data: LoginFormDataInterface) {
-    return axios.post<AuthResponseInterface>("/auth/login", data);
+  login(formData: LoginFormDataInterface) {
+    return axios.post<AuthResponseInterface>("/auth/login", formData);
   }
 
   logout() {

@@ -23,9 +23,9 @@ const userInitialState: UsersInterface = {
 export const UsersContext = createContext<ProviderStateInterface>({} as ProviderStateInterface);
 
 export const UsersContextProvider: React.FC = ({ children }) => {
-  const [token, setToken] = useState<string>("");
-  const [callback, setCallback] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [token, setToken] = useState("");
+  const [callback, setCallback] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<UsersInterface>(userInitialState);
 
   useEffect(() => {
@@ -36,7 +36,6 @@ export const UsersContextProvider: React.FC = ({ children }) => {
         try {
           const { data } = await AuthService.refreshToken();
           setToken(data.accessToken);
-
           setTimeout(() => getAccesToken, 1000 * 60 * 10);
         } catch (error: any) {
           return alert(error.response?.data.message);

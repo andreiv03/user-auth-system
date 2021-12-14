@@ -1,12 +1,9 @@
-import type { NextPage } from "next";
-
-import styles from "../styles/pages/home.module.scss";
+import { NextPage } from "next";
 
 const Home: NextPage = () => {
   return (
-    <div className={styles.hero_section}>
-      
-    </div>
+    <>
+    </>
   );
 }
 
