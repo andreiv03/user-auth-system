@@ -15,7 +15,7 @@ class ProductsService {
   }
 
   updateProduct(token: string, id: string, formData: ProductFormDataInterface) {
-    return axios.patch<MessageResponseInterface>(`/products/${id}`, { ...formData }, {
+    return axios.patch<MessageResponseInterface>(`/products/${id}`, formData, {
       headers: { Authorization: token }
     });
   }

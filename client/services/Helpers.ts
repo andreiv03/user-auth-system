@@ -21,17 +21,25 @@ class Helpers {
     const strength = Math.floor(Math.log(Math.pow(complexity, length)) / Math.log(2));
 
     if (strength > 100) return "Very Strong";
-    else if (strength > 75) return "Strong";
-    else if (strength > 50) return "Medium";
-    else return "Weak";
+    if (strength > 75) return "Strong";
+    if (strength > 50) return "Medium";
+    return "Weak";
   }
 
   shortenFileName(fileName: string) {
     const lastDotIndex = fileName.lastIndexOf(".");
     const name = fileName.slice(0, lastDotIndex), extension = fileName.slice(lastDotIndex);
 
-    if (name.length > 15) return `${name.substring(0, 10)}...${name.substring(name.length - 3)}${extension}`; 
-    else return `${name}${extension}`;
+    if (name.length > 20) return `${name.substring(0, 15)}...${name.substring(name.length - 3)}${extension}`;
+    return `${name}${extension}`;
+  }
+
+  formatFileSize(size: number) {
+    if (size === 0) return "0 bytes";
+
+    const sizes = ["bytes", "KB", "MB"], decimals = 2;
+    const exponent = Math.floor(Math.log(size) / Math.log(1024));
+    return `${parseFloat((size / Math.pow(1024, exponent)).toFixed(decimals))} ${sizes[exponent]}`;
   }
 }
 

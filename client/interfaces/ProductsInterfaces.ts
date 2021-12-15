@@ -8,7 +8,7 @@ export interface ProductsInterface {
   image: {
     fileId: string;
     url: string;
-  }
+  };
 };
 
 export interface ProductFormDataInterface {

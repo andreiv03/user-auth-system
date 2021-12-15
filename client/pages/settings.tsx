@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useContext, useState, useEffect, useRef, useMemo } from "react";
-import { RiSettings4Fill, RiShieldKeyholeFill, RiCollageFill, RiLogoutBoxFill, RiArrowRightSLine } from "react-icons/ri";
+import { RiSettings4Fill, RiShieldKeyholeFill, RiCheckboxMultipleBlankFill, RiCollageFill, RiLogoutBoxFill, RiArrowRightSLine } from "react-icons/ri";
 import debounce from "lodash.debounce";
 
 import Handlers from "../services/Handlers";
@@ -12,6 +12,7 @@ import NotFound from "../components/NotFound";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Account from "../components/settings/Account";
 import Security from "../components/settings/Security";
+import Products from "../components/settings/Products";
 import Categories from "../components/settings/Categories";
 
 const Settings: NextPage = () => {
@@ -65,6 +66,16 @@ const Settings: NextPage = () => {
           </div>
 
           {user.isAdmin && (
+            <div className={`${styles.item} ${activeItem === 3 ? styles.active : ""}`} onClick={() => handleItemChange(3)}>
+              <div className={styles.container}>
+                <RiCheckboxMultipleBlankFill />
+                <h2>Products</h2>
+              </div>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+          )}
+
+          {user.isAdmin && (
             <div className={`${styles.item} ${activeItem === 4 ? styles.active : ""}`} onClick={() => handleItemChange(4)}>
               <div className={styles.container}>
                 <RiCollageFill />
@@ -90,6 +101,7 @@ const Settings: NextPage = () => {
         {isLoading && <LoadingSpinner />}
         {activeItem === 1 && <Account />}
         {activeItem === 2 && <Security />}
+        {activeItem === 3 && <Products />}
         {activeItem === 4 && <Categories />}
       </div>
     </div>
