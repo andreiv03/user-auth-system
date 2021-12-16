@@ -36,7 +36,7 @@ module.exports = {
       if (!category) return res.status(400).json({ message: "The category does not exist." });
 
       const currentCategory = await Categories.findOne({ name });
-      if (currentCategory) return res.status(400).json({ message: "This category already exists." });
+      if (currentCategory) return res.status(400).json({ message: "This category already exists." }); // conditia in caz ca actualizeaza doar parent-ul
 
       await Categories.updateMany({ parent: category.name }, {
         $set: {

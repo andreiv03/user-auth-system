@@ -58,7 +58,7 @@ const Products: React.FC = () => {
       </div>
 
       <div className={styles.section}>
-        <h3>Create products</h3>
+        <h3>Create product</h3>
         <p>From here you can create a new product.</p>
 
         <form onSubmit={handleFormSubmit} autoComplete="off">

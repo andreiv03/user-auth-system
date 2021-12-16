@@ -8,8 +8,3 @@ export interface CategoryFormDataInterface {
   name: string;
   parent: string;
 };
-
-export interface CategoryUpdateInterface {
-  id: string;
-  name: string;
-};

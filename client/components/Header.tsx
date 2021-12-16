@@ -1,12 +1,13 @@
-import Link from "next/link";
-import { useContext, useState } from "react";
-import {  } from "react-icons/ri";
+import { useContext } from "react";
+import { RiMapPinUserFill } from "react-icons/ri";
 
 import { UsersContext } from "../contexts/UsersContext";
+
 import styles from "../styles/components/header.module.scss";
+import Link from "./Link";
 
 const Header: React.FC = () => {
-  const { isLoggedIn, user } = useContext(UsersContext);
+  const { isLoggedIn } = useContext(UsersContext);
 
   return (
     <header className={styles.header}>

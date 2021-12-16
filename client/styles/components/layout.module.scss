@@ -1,0 +1,35 @@
+.layout {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+
+  &.full {
+    .page {
+      width: 100vw;
+    }
+  }
+
+  .page {
+    width: calc(100vw - var(--header-width));
+    height: 100vh;
+  }
+}
+
+// Media Queries
+@media screen and (max-width: 940px) {
+  .layout {
+    flex-direction: column;
+
+    &.full {
+      .page {
+        height: 100vh;
+      }
+    }
+
+    .page {
+      width: 100vw;
+      height: calc(100vh - var(--header-height));
+    }
+  }
+}

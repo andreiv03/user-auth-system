@@ -6,11 +6,12 @@ import { UsersContextProvider } from "../contexts/UsersContext";
 import { CategoriesContextProvider } from "../contexts/CategoriesContext";
 
 import "../styles/globals.scss";
+import styles from "../styles/components/layout.module.scss";
 import Header from "../components/Header";
 
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
-  const [isHeaderVisible, setIsHeaderVisible] = useState<boolean>(true);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
 
   useEffect(() => {
     if (router.pathname === "/register" || router.pathname === "/login") setIsHeaderVisible(false);
@@ -19,8 +20,13 @@ const App = ({ Component, pageProps }: AppProps) => {
 
   return (
     <UsersContextProvider>
-      <CategoriesContextProvider>   
-        <Component {...pageProps} />
+      <CategoriesContextProvider>
+        <main className={`${styles.layout} ${!isHeaderVisible ? styles.full : ""}`}>
+          {isHeaderVisible && <Header />}
+          <div className={styles.page}>
+            <Component {...pageProps} />
+          </div>
+        </main>
       </CategoriesContextProvider>
     </UsersContextProvider>
   );

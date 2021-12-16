@@ -164,15 +164,13 @@
             background: var(--valid);
 
             &::before {
-              content: "";
+              content: "✔";
               position: absolute;
-              top: 4px;
-              left: 5.7px;
-              transform: rotate(45deg);
-              width: 4px;
-              height: 7px;
-              border-right: 2px solid var(--background-two);
-              border-bottom: 2px solid var(--background-two);
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              color: var(--background-two);
+              font-size: 0.55rem;
             }
           }
 

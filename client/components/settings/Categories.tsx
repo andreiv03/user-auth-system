@@ -5,7 +5,7 @@ import CategoriesService from "../../services/CategoriesService";
 import Handlers from "../../services/Handlers";
 import { UsersContext } from "../../contexts/UsersContext";
 import { CategoriesContext } from "../../contexts/CategoriesContext";
-import { CategoriesInterface, CategoryFormDataInterface as FormData, CategoryUpdateInterface } from "../../interfaces/CategoriesInterfaces";
+import { CategoriesInterface, CategoryFormDataInterface as FormData } from "../../interfaces/CategoriesInterfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
 import NotFound from "../NotFound";
@@ -21,17 +21,17 @@ const Categories: React.FC = () => {
   const { callback: [callback, setCallback], categories } = useContext(CategoriesContext);
 
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
-  const [categoryUpdate, setCategoryUpdate] = useState<CategoryUpdateInterface>({} as CategoryUpdateInterface);
+  const [categoryUpdate, setCategoryUpdate] = useState<CategoriesInterface>({} as CategoriesInterface);
 
   const handleFormValidity = () => {
     if (!formData.name) return true;
-    if (categoryUpdate.id && formData.name === categoryUpdate.name) return true;
+    if (categoryUpdate._id && formData.name === categoryUpdate.name && formData.parent === categoryUpdate.parent) return true;
     return false;
   }
 
   const handleUpdateFormCancel = () => {
     setFormData(formDataInitialState);
-    setCategoryUpdate({} as CategoryUpdateInterface);
+    setCategoryUpdate({} as CategoriesInterface);
   }
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -39,11 +39,11 @@ const Categories: React.FC = () => {
 
     try {
       let data;
-      if (!categoryUpdate.id) ({ data } = await CategoriesService.createCategory(token, formData));
-      else ({ data } = await CategoriesService.updateCategory(token, categoryUpdate.id, formData));
+      if (!categoryUpdate._id) ({ data } = await CategoriesService.createCategory(token, formData));
+      else ({ data } = await CategoriesService.updateCategory(token, categoryUpdate._id, formData));
 
       setFormData(formDataInitialState);
-      setCategoryUpdate({} as CategoryUpdateInterface);
+      setCategoryUpdate({} as CategoriesInterface);
       setCallback(!callback);
       return alert(data.message);
     } catch (error: any) {
@@ -53,14 +53,14 @@ const Categories: React.FC = () => {
 
   const handleCategoryUpdate = async (category: CategoriesInterface) => {
     setFormData({ name: category.name, parent: category.parent });
-    setCategoryUpdate({ id: category._id, name: category.name });
+    setCategoryUpdate({ _id: category._id, name: category.name, parent: category.parent });
   }
 
   const handleCategoryDelete = async (id: string) => {
     try {
       const { data } = await CategoriesService.deleteCategory(token, id);
       setFormData(formDataInitialState);
-      setCategoryUpdate({} as CategoryUpdateInterface);
+      setCategoryUpdate({} as CategoriesInterface);
       setCallback(!callback);
       return alert(data.message);
     } catch (error: any) {
@@ -77,8 +77,8 @@ const Categories: React.FC = () => {
       </div>
 
       <div className={styles.section}>
-        <h3>{!categoryUpdate.id ? "Create" : "Update"} category</h3>
-        <p>From here you can {!categoryUpdate.id ? "create" : "update"} a category.</p>
+        <h3>{!categoryUpdate._id ? "Create" : "Update"} category</h3>
+        <p>From here you can {!categoryUpdate._id ? "create" : "update"} a category.</p>
 
         <form onSubmit={handleFormSubmit} autoComplete="off">
           <div className={styles.field}>
@@ -88,8 +88,8 @@ const Categories: React.FC = () => {
           </div>
 
           <SelectInput styles={styles} options={categories} name="parent" value={formData.parent} setState={setFormData} />
-          <button type="submit" disabled={handleFormValidity()}>{!categoryUpdate.id ? "Create" : "Update"}</button>
-          {categoryUpdate.id && <button type="button" onClick={handleUpdateFormCancel}>Cancel</button>}
+          <button type="submit" disabled={handleFormValidity()}>{!categoryUpdate._id ? "Create" : "Update"}</button>
+          {categoryUpdate._id && <button type="button" onClick={handleUpdateFormCancel}>Cancel</button>}
         </form>
       </div>
 

@@ -1,8 +1,7 @@
 .page {
   position: relative;
-  width: 100vw;
-  height: 100vh;
-  border-left: 70px solid var(--accent);
+  width: 100%;
+  height: 100%;
   display: flex;
 
   .sidebar {
@@ -26,7 +25,6 @@
     }
 
     .items {
-      background: var(--background-one);
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -110,7 +108,8 @@
 
   .wrapper {
     position: relative;
-    height: 100vh;
+    height: 100%;
+    background: var(--background-one);
     padding: 2rem 3rem;
     overflow-y: auto;
     flex-grow: 1;
@@ -290,15 +289,13 @@
                 background: var(--valid);
 
                 &::before {
-                  content: "";
+                  content: "✔";
                   position: absolute;
-                  top: 4px;
-                  left: 5.7px;
-                  transform: rotate(45deg);
-                  width: 4px;
-                  height: 7px;
-                  border-right: 2px solid var(--background-two);
-                  border-bottom: 2px solid var(--background-two);
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  color: var(--background-two);
+                  font-size: 0.55rem;
                 }
               }
 
@@ -550,9 +547,6 @@
 // Media Queries
 @media screen and (max-width: 940px) {
   .page {
-    border: 0;
-    border-top: 50px solid var(--accent);
-
     .sidebar {
       position: absolute;
       top: 0;

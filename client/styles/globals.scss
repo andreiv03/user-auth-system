@@ -10,7 +10,8 @@
   --warning: #ffc900;
   --error: #ff716d;
 
-  --header-height: 70px;
+  --header-width: 80px;
+  --header-height: 60px;
 }
 
 *,
@@ -24,18 +25,16 @@
 html,
 body,
 input,
-select,
-button,
-textarea {
+textarea,
+button {
   color: var(--foreground-one);
   font-family: "Poppins", sans-serif;
   font-size: 16px;
 }
 
 input,
-select,
-button,
-textarea {
+textarea,
+button {
   background: none;
   border: none;
   outline: none;
