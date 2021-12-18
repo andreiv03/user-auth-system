@@ -23,27 +23,6 @@ module.exports = () => {
 
   if (process.env.NODE_ENV === "production") {
     server.use(express.static(path.join(__dirname, "../client/out")));
-
-    // Pages
-    server.get("/", (req, res) => {
-      res.sendFile(path.join(__dirname, "..client/out/index.html"));
-    });
-
-    server.get("/login", (req, res) => {
-      res.sendFile(path.join(__dirname, "..client/out/login.html"));
-    });
-
-    server.get("/register", (req, res) => {
-      res.sendFile(path.join(__dirname, "..client/out/register.html"));
-    });
-
-    server.get("/settings", (req, res) => {
-      res.sendFile(path.join(__dirname, "..client/out/settings.html"));
-    });
-
-    server.get("/404", (req, res) => {
-      res.sendFile(path.join(__dirname, "..client/out/404.html"));
-    });
   }
 
   return server;
