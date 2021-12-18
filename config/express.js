@@ -22,26 +22,26 @@ module.exports = () => {
   server.use("/api", routes);
 
   if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../client/out")));
+    server.use(express.static(path.join(__dirname, "../client/out")));
 
     // Pages
-    app.get("/", (req, res) => {
+    server.get("/", (req, res) => {
       res.sendFile(path.join(__dirname, "..client/out/index.html"));
     });
 
-    app.get("/login", (req, res) => {
+    server.get("/login", (req, res) => {
       res.sendFile(path.join(__dirname, "..client/out/login.html"));
     });
 
-    app.get("/register", (req, res) => {
+    server.get("/register", (req, res) => {
       res.sendFile(path.join(__dirname, "..client/out/register.html"));
     });
 
-    app.get("/settings", (req, res) => {
+    server.get("/settings", (req, res) => {
       res.sendFile(path.join(__dirname, "..client/out/settings.html"));
     });
 
-    app.get("/404", (req, res) => {
+    server.get("/404", (req, res) => {
       res.sendFile(path.join(__dirname, "..client/out/404.html"));
     });
   }
