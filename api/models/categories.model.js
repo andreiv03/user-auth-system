@@ -4,7 +4,8 @@ const categoriesSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    unique: true
   },
   parent: {
     type: String,

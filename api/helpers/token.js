@@ -4,7 +4,10 @@ const { JWT_SECRET } = require("../../constants");
 module.exports = {
   signToken: (sub, expiresIn) => {
     return new Promise((resolve, reject) => {
-      jwt.sign({ sub, iat: Date.now() }, JWT_SECRET, { expiresIn }, (error, token) => {
+      jwt.sign({
+        sub,
+        iat: Date.now()
+      }, JWT_SECRET, { expiresIn }, (error, token) => {
         if (error) reject(error);
         resolve(token);
       });

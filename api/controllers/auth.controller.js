@@ -1,8 +1,8 @@
 const bcrypt = require("bcrypt");
 
+const { ADMINS } = require("../../constants");
 const { Users } = require("../models");
 const { token } = require("../helpers");
-const { ADMINS } = require("../../constants");
 
 module.exports = {
   register: async (req, res) => {

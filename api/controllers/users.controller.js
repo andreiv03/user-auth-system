@@ -12,7 +12,7 @@ module.exports = {
       return res.status(500).json({ message: error.message });
     }
   },
-  updateUser: async (req, res) => {
+  updateAccount: async (req, res) => {
     try {
       const { firstName, lastName, email, phoneNumber } = req.body;
       
@@ -42,7 +42,9 @@ module.exports = {
       if (!match) return res.status(400).json({ message: "The current password is incorrect." });
 
       const passwordHash = await bcrypt.hash(newPassword, 10);
-      await Users.findByIdAndUpdate(req.params.id, { password: passwordHash });
+      await Users.findByIdAndUpdate(req.params.id, {
+        password: passwordHash
+      });
 
       return res.status(200).json({ message: "The password has been changed." });
     } catch (error) {

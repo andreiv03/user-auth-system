@@ -16,7 +16,7 @@ class UsersService {
   }
 
   changePassword(token: string, id: string, formData: PasswordFormDataInterface) {
-    return axios.patch<MessageResponseInterface>(`/users/password/${id}`, formData, {
+    return axios.patch<MessageResponseInterface>(`/users/change-password/${id}`, formData, {
       headers: { Authorization: token }
     });
   }

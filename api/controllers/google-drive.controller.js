@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { google } = require("googleapis");
+
 const { GOOGLE_DRIVE_CLIENT_ID, GOOGLE_DRIVE_CLIENT_SECRET, GOOGLE_DRIVE_REDIRECT_URI, GOOGLE_DRIVE_REFRESH_TOKEN } = require("../../constants");
 const { path } = require("../helpers");
 
@@ -19,7 +20,7 @@ const drive = google.drive({
 module.exports = {
   upload: async (req, res) => {
     try {
-      const { file } = req.files;      
+      const { file } = req.files;
 
       const { data: createData } = await drive.files.create({
         requestBody: {
