@@ -1,7 +1,7 @@
 const env = require("dotenv").config();
 
-if (env.error) throw new Error("Couldn't find .env file!");
 process.env.NODE_ENV = process.env.NODE_ENV || "development";
+if (process.env.NODE_ENV === "development" && env.error) throw new Error("Couldn't find .env file!");
 
 module.exports = {
   PORT: process.env.PORT ? parseInt(process.env.PORT, 10) : 5000,
