@@ -3,8 +3,9 @@ import { google } from "googleapis";
 import fs from "fs";
 
 import Authorization from "../../../middleware/authorization";
-import { GOOGLE_DRIVE_CLIENT_ID, GOOGLE_DRIVE_CLIENT_SECRET, GOOGLE_DRIVE_REDIRECT_URI, GOOGLE_DRIVE_REFRESH_TOKEN } from "../../../constants";
+import { GOOGLE_DRIVE_CLIENT_ID, GOOGLE_DRIVE_CLIENT_SECRET, GOOGLE_DRIVE_REFRESH_TOKEN } from "../../../constants";
 
+const GOOGLE_DRIVE_REDIRECT_URI = "https://developers.google.com/oauthplayground";
 const oauth2Client = new google.auth.OAuth2(
   GOOGLE_DRIVE_CLIENT_ID,
   GOOGLE_DRIVE_CLIENT_SECRET,
