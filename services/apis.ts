@@ -7,9 +7,9 @@ class APIsClass {
     formData.append("file", file);
     console.log(formData, file)
 
-    // return axios.post<GoogleDriveUploadInterface>("/google-drive", formData, {
-    //   headers: { "content-type": "multipart/form-data", Authorization: token }
-    // });
+    return axios.post<GoogleDriveUploadInterface>("/google-drive", formData, {
+      headers: { "content-type": "multipart/form-data", Authorization: token }
+    });
   }
 
   googleDriveDelete(token:string, fileId: string) {
