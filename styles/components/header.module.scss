@@ -1,8 +1,86 @@
 .header {
   width: var(--header-width);
   height: 100vh;
-  background: var(--accent);
-  color: var(--background-one);
+  background: var(--foreground-one);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .logo {
+    padding: 1.5rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      color: var(--background-one);
+      font-size: 2.5rem;
+      display: flex;
+    }
+  }
+
+  .items {
+    display: flex;
+    flex-direction: column;
+
+    .item {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 2rem;
+
+      a {
+        svg {
+          margin: 0.25rem;
+          color: var(--background-one);
+          font-size: 2rem;
+          display: flex;
+          transition: 100ms ease-in;
+
+          &:hover {
+            color: var(--accent);
+          }
+        }
+
+        &.active {
+          svg {
+            color: var(--accent);
+          }
+
+          &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 3px;
+            background: var(--accent);
+          }
+        }
+      }
+    }
+  }
+
+  .user {
+    padding: 1.5rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      margin: 0.25rem;
+      color: var(--background-one);
+      font-size: 2rem;
+      display: flex;
+      cursor: pointer;
+      transition: 100ms ease-in;
+
+      &:hover {
+        color: var(--accent);
+      }
+    }
+  }
 }
 
 // Media Queries
@@ -10,5 +88,39 @@
   .header {
     width: 100vw;
     height: var(--header-height);
+    padding: 0 2rem;
+    flex-direction: row;
+
+    .wrapper {
+      display: flex;
+
+      .logo {
+        svg {
+          font-size: 2rem;
+        }
+      }
+
+      .items {
+        flex-direction: row;
+
+        .item {
+          margin: 0;
+          margin-left: 2rem;
+
+          a {
+            &.active {
+              &::before {
+                top: unset;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                width: unset;
+                height: 3px;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

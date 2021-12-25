@@ -1,14 +1,15 @@
 import axios from "./axios";
 import { MessageResponseInterface, GoogleDriveUploadInterface } from "../interfaces/interfaces";
 
-class APIs {
+class APIsClass {
   googleDriveUpload(token: string, file: File) {
     const formData = new FormData();
     formData.append("file", file);
+    console.log(formData, file)
 
-    return axios.post<GoogleDriveUploadInterface>("/google-drive", formData, {
-      headers: { "content-type": "multipart/form-data", Authorization: token }
-    });
+    // return axios.post<GoogleDriveUploadInterface>("/google-drive", formData, {
+    //   headers: { "content-type": "multipart/form-data", Authorization: token }
+    // });
   }
 
   googleDriveDelete(token:string, fileId: string) {
@@ -18,4 +19,6 @@ class APIs {
   }
 }
 
-export default new APIs();
+const APIs = new APIsClass();
+
+export default APIs;

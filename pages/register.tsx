@@ -11,7 +11,7 @@ import { UsersContext } from "../contexts/users-context";
 import { RegisterFormDataInterface as FormData } from "../interfaces/auth-interfaces";
 
 import styles from "../styles/pages/auth.module.scss";
-import NotFound from "../components/NotFound";
+import NotFound from "../components/not-found";
 
 const formDataInitialState: FormData = {
   firstName: "",
@@ -42,9 +42,9 @@ const Register: NextPage = () => {
 
     try {
       const { data } = await AuthService.register(formData);
-      setToken(data.accessToken);
       localStorage.setItem("isLoggedIn", "true");
-      return router.push("/");
+      setToken(data.accessToken);
+      router.push("/");
     } catch (error: any) {
       return alert(error.response?.data.message);
     }
@@ -60,13 +60,13 @@ const Register: NextPage = () => {
       
         <form className={styles.form} onSubmit={handleFormSubmit} noValidate>
           <div className={styles.field}>
-            <input type="text" id="firstName" name="firstName" autoComplete="given-name" placeholder=" "
+            <input type="text" id="firstName" name="firstName" autoComplete="off" placeholder=" "
               value={formData.firstName} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
             <label htmlFor="firstName">First name</label>
           </div>
 
           <div className={styles.field}>
-            <input type="text" id="lastName" name="lastName" autoComplete="family-name" placeholder=" "
+            <input type="text" id="lastName" name="lastName" autoComplete="off" placeholder=" "
               value={formData.lastName} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
             <label htmlFor="lastName">Last name</label>
           </div>

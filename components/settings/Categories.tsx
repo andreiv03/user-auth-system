@@ -8,8 +8,8 @@ import { CategoriesContext } from "../../contexts/categories-context";
 import { CategoriesInterface, CategoryFormDataInterface as FormData } from "../../interfaces/categories-interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
-import NotFound from "../NotFound";
-import SelectInput from "../SelectInput";
+import NotFound from "../not-found";
+import SelectInput from "../select-input";
 
 const formDataInitialState: FormData = {
   name: "",
@@ -45,7 +45,7 @@ const Categories: React.FC = () => {
       setFormData(formDataInitialState);
       setCategoryUpdate({} as CategoriesInterface);
       setCallback(!callback);
-      return alert(data.message);
+      alert(data.message);
     } catch (error: any) {
       return alert(error.response?.data.message);
     }
@@ -62,7 +62,7 @@ const Categories: React.FC = () => {
       setFormData(formDataInitialState);
       setCategoryUpdate({} as CategoriesInterface);
       setCallback(!callback);
-      return alert(data.message);
+      alert(data.message);
     } catch (error: any) {
       return alert(error.response?.data.message);
     }
@@ -72,10 +72,6 @@ const Categories: React.FC = () => {
 
   return (
     <div className={styles.content}>
-      <div className={styles.top_section}>
-        <h2>Categories</h2>
-      </div>
-
       <div className={styles.section}>
         <h3>{!categoryUpdate._id ? "Create" : "Update"} category</h3>
         <p>From here you can {!categoryUpdate._id ? "create" : "update"} a category.</p>
@@ -87,7 +83,7 @@ const Categories: React.FC = () => {
             <label htmlFor="name">Name</label>
           </div>
 
-          <SelectInput styles={styles} options={categories} name="parent" value={formData.parent} setState={setFormData} />
+          <SelectInput styles={styles} options={categories} name="parent" value={formData.parent} disabled={formData.name} setState={setFormData} />
           <button type="submit" disabled={handleFormValidity()}>{!categoryUpdate._id ? "Create" : "Update"}</button>
           {categoryUpdate._id && <button type="button" onClick={handleUpdateFormCancel}>Cancel</button>}
         </form>

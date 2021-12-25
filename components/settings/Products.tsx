@@ -9,8 +9,8 @@ import { CategoriesContext } from "../../contexts/categories-context";
 import { ProductFormDataInterface as FormData } from "../../interfaces/products-interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
-import NotFound from "../NotFound";
-import SelectInput from "../SelectInput";
+import NotFound from "../not-found";
+import SelectInput from "../select-input";
 
 const formDataInitialState: FormData = {
   sku: "",
@@ -43,7 +43,7 @@ const Products: React.FC = () => {
 
       setFormData(formDataInitialState);
       setFile({} as File);
-      return alert(data.message);
+      alert(data.message);
     } catch (error: any) {
       return alert(error.response?.data.message);
     }
@@ -53,10 +53,6 @@ const Products: React.FC = () => {
 
   return (
     <div className={styles.content}>
-      <div className={styles.top_section}>
-        <h2>Products</h2>
-      </div>
-
       <div className={styles.section}>
         <h3>Create product</h3>
         <p>From here you can create a new product.</p>

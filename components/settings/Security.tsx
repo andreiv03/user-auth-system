@@ -8,7 +8,7 @@ import { UsersContext } from "../../contexts/users-context";
 import { PasswordFormDataInterface as FormData } from "../../interfaces/users-interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
-import NotFound from "../NotFound";
+import NotFound from "../not-found";
 
 const formDataInitialState: FormData = {
   currentPassword: "",
@@ -17,6 +17,7 @@ const formDataInitialState: FormData = {
 
 const Security: React.FC = () => {
   const { token: [token], user, isLoggedIn } = useContext(UsersContext);
+
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [newPasswordStrength, setNewPasswordStrength] = useState("");
@@ -35,7 +36,7 @@ const Security: React.FC = () => {
     try {
       const { data } = await UsersService.changePassword(token, user._id, formData);
       setFormData(formDataInitialState);
-      return alert(data.message);
+      alert(data.message);
     } catch (error: any) {
       return alert(error.response?.data.message);
     }
@@ -45,10 +46,6 @@ const Security: React.FC = () => {
 
   return (
     <div className={styles.content}>
-      <div className={styles.top_section}>
-        <h2>Security</h2>
-      </div>
-
       <div className={styles.section}>
         <h3>Change password</h3>
         <p>It&apos;s a good idea to use a strong password that you&apos;re not using elsewhere.</p>

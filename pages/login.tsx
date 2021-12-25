@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
@@ -10,7 +10,7 @@ import { UsersContext } from "../contexts/users-context";
 import { LoginFormDataInterface as FormData } from "../interfaces/auth-interfaces";
 
 import styles from "../styles/pages/auth.module.scss";
-import NotFound from "../components/NotFound";
+import NotFound from "../components/not-found";
 
 const formDataInitialState: FormData = {
   email: "",
@@ -29,9 +29,9 @@ const Login: NextPage = () => {
 
     try {
       const { data } = await AuthService.login(formData);
-      setToken(data.accessToken);
       localStorage.setItem("isLoggedIn", "true");
-      return router.push("/");
+      setToken(data.accessToken);
+      router.push("/");
     } catch (error: any) {
       return alert(error.response?.data.message);
     }

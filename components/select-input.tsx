@@ -8,10 +8,11 @@ interface Props {
   options: Array<any>;
   name: string;
   value: string;
+  disabled?: string;
   setState: React.Dispatch<React.SetStateAction<any>>;
 };
 
-const SelectInput: React.FC<Props> = ({ styles, options, name, value, setState }) => {
+const SelectInput: React.FC<Props> = ({ styles, options, name, value, disabled, setState }) => {
   const [isActive, setIsActive] = useState(false);
 
   const handleItemChange = (option: string) => {
@@ -21,6 +22,8 @@ const SelectInput: React.FC<Props> = ({ styles, options, name, value, setState }
       [name]: option
     }));
   }
+
+  if (disabled) options = options.filter(option => option.name.toLowerCase() !== disabled.toLowerCase());
 
   return (
     <div className={styles.field}>

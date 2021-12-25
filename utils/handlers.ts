@@ -1,12 +1,12 @@
 import { NextRouter } from "next/router";
 import AuthService from "../services/auth-service";
 
-class Handlers {
+class HandlersClass {
   async handleLogout(router: NextRouter, setToken: React.Dispatch<React.SetStateAction<string>>) {
     try {
       await AuthService.logout();
-      setToken("");
       localStorage.removeItem("isLoggedIn");
+      setToken("");
       router.push("/");
     } catch (error: any) {
       return alert(error.response.data.message);
@@ -22,9 +22,14 @@ class Handlers {
 
   handleFileUpload(event: React.ChangeEvent<HTMLInputElement>, setState: React.Dispatch<React.SetStateAction<any>>) {
     if (!event.target.files || !event.target.files[0]) return setState({} as File);
-    if (event.target.files[0].type !== "image/jpeg" && event.target.files[0].type !== "image/png") return setState({} as File);
+    if (event.target.files[0].type !== "image/jpeg" && event.target.files[0].type !== "image/png") {
+      alert("You can upload only PNG or JPEG files!");
+      return setState({} as File);
+    }
     return setState(event.target.files[0]);
   }
 }
 
-export default new Handlers();
+const Handlers = new HandlersClass();
+
+export default Handlers;

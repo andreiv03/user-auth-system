@@ -7,7 +7,7 @@ import { CategoriesContextProvider } from "../contexts/categories-context";
 
 import "../styles/globals.scss";
 import styles from "../styles/components/layout.module.scss";
-import Header from "../components/Header";
+import Header from "../components/header";
 
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();

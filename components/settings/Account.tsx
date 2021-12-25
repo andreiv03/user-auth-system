@@ -7,7 +7,7 @@ import { UsersContext } from "../../contexts/users-context";
 import { AccountFormDataInterface as FormData } from "../../interfaces/users-interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
-import NotFound from "../NotFound";
+import NotFound from "../not-found";
 
 const formDataInitialState: FormData = {
   firstName: "",
@@ -35,7 +35,7 @@ const Account: React.FC = () => {
     return false;
   }
 
-  const handleAccountFormValidity = () => {
+  const handleContactFormValidity = () => {
     if (!formData.email || !formData.phoneNumber) return true;
     if (formData.email === user.email && formData.phoneNumber === user.phoneNumber) return true;
     if (!Helpers.checkEmailValidity(formData.email)) return true;
@@ -49,19 +49,19 @@ const Account: React.FC = () => {
     try {
       const { data } = await UsersService.updateUser(token, user._id, formData);
       setCallback(!callback);
-      return alert(data.message);
+      alert(data.message);
     } catch (error: any) {
       return alert(error.response?.data.message);
     }
   }
 
-  const handleAccountFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleContactFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
       const { data } = await UsersService.updateUser(token, user._id, formData);
       setCallback(!callback);
-      return alert(data.message);
+      alert(data.message);
     } catch (error: any) {
       return alert(error.response?.data.message);
     }
@@ -71,10 +71,6 @@ const Account: React.FC = () => {
 
   return (
     <div className={styles.content}>
-      <div className={styles.top_section}>
-        <h2>Account</h2>
-      </div>
-
       <div className={styles.section}>
         <h3>Profile</h3>
         <p>This information will be displayed publicly, so be careful what you share.</p>
@@ -97,10 +93,10 @@ const Account: React.FC = () => {
       </div>
 
       <div className={styles.section}>
-        <h3>Personal informations</h3>
-        <p>Here you can modify your account details.</p>
+        <h3>Contact</h3>
+        <p>From here you can modify your contact information.</p>
 
-        <form onSubmit={handleAccountFormSubmit}>
+        <form onSubmit={handleContactFormSubmit}>
           <div className={styles.field}>
             <input type="email" id="email" name="email" autoComplete="email" placeholder=" "
               value={formData.email} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
@@ -119,7 +115,7 @@ const Account: React.FC = () => {
               ${formData.phoneNumber !== user.phoneNumber && formData.phoneNumber ? (Helpers.checkPhoneNumberValidity(formData.phoneNumber) ? styles.true : styles.false) : ""}`} />
           </div>
 
-          <button type="submit" disabled={handleAccountFormValidity()}>Update</button>
+          <button type="submit" disabled={handleContactFormValidity()}>Update</button>
         </form>
       </div>
     </div>

@@ -2,9 +2,9 @@
   display: flex;
 
   .content {
-    width: 600px;
+    width: 550px;
     min-height: 100vh;
-    padding: 3rem 100px;
+    padding: 3rem 75px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -100,11 +100,9 @@
 
           &:focus ~ label,
           &:not(:placeholder-shown) ~ label {
-            top: 0.65rem;
-            transform: unset;
+            transform: translateY(-137%);
             color: var(--foreground-two);
             font-size: 0.6rem;
-            font-weight: 600;
           }
 
           &[type="password"] ~ .validity {
@@ -122,7 +120,7 @@
           text-transform: capitalize;
           pointer-events: none;
           user-select: none;
-          transition: 100ms ease-in;
+          transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
 
           .weak {
             color: var(--error);
@@ -235,14 +233,14 @@
   }
 
   .background {
-    width: calc(100% - 600px);
+    width: calc(100% - 550px);
     min-height: 100vh;
     background: var(--accent);
   }
 }
 
 // Media Queries
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 550px) {
   .page {
     .content {
       padding: 2rem;
