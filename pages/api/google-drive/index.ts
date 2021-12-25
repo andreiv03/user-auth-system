@@ -22,7 +22,7 @@ const drive = google.drive({
 const uploadHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await Authorization(req, true);
-    console.log(req.body);
+    
     // const { file } = req.body;
 
     // const { data: createData } = await drive.files.create({
