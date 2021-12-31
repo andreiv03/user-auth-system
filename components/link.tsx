@@ -1,6 +1,6 @@
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 
 interface Props extends ComponentProps<"a"> {
   href: string;

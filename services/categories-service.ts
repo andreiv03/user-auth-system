@@ -1,8 +1,8 @@
 import axios from "./axios";
-import { CategoriesInterface, CategoryFormDataInterface } from "../interfaces/categories-interfaces";
-import { MessageResponseInterface } from "../interfaces/interfaces";
+import type { CategoriesInterface, CategoryFormDataInterface } from "../interfaces/categories-interfaces";
+import type { MessageResponseInterface } from "../interfaces";
 
-class CategoriesService {
+class CategoriesServiceClass {
   getCategories() {
     return axios.get<CategoriesInterface[]>("/categories");
   }
@@ -26,4 +26,5 @@ class CategoriesService {
   }
 }
 
-export default new CategoriesService();
+const CategoriesService = new CategoriesServiceClass();
+export default CategoriesService;

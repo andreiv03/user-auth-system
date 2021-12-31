@@ -1,8 +1,8 @@
 import axios from "./axios";
-import { ProductsInterface, ProductFormDataInterface } from "../interfaces/products-interfaces";
-import { MessageResponseInterface, GoogleDriveUploadInterface } from "../interfaces/interfaces";
+import type { ProductsInterface, ProductFormDataInterface } from "../interfaces/products-interfaces";
+import type { MessageResponseInterface, GoogleDriveUploadInterface } from "../interfaces";
 
-class ProductsService {
+class ProductsServiceClass {
   getProducts() {
     return axios.get<ProductsInterface[]>("/products");
   }
@@ -26,4 +26,5 @@ class ProductsService {
   }
 }
 
-export default new ProductsService();
+const ProductsService = new ProductsServiceClass;
+export default ProductsService;

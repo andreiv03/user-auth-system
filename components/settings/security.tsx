@@ -1,23 +1,20 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { RiEyeOffFill, RiEyeFill } from "react-icons/ri";
 
-import UsersService from "../../services/users-service";
+import UserService from "../../services/user-service";
 import Handlers from "../../utils/handlers";
 import Helpers from "../../utils/helpers";
-import { UsersContext } from "../../contexts/users-context";
-import { PasswordFormDataInterface as FormData } from "../../interfaces/users-interfaces";
+import type { PasswordFormDataInterface as FormData } from "../../interfaces/user-interfaces";
+import type { SecurityPropsInterface as PropsInterface } from "../../interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
-import NotFound from "../not-found";
 
 const formDataInitialState: FormData = {
   currentPassword: "",
   newPassword: ""
 };
 
-const Security: React.FC = () => {
-  const { token: [token], user, isLoggedIn } = useContext(UsersContext);
-
+const Security: React.FC<PropsInterface> = ({ token: [token], user }) => {
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [newPasswordStrength, setNewPasswordStrength] = useState("");
@@ -34,15 +31,13 @@ const Security: React.FC = () => {
     event.preventDefault();
 
     try {
-      const { data } = await UsersService.changePassword(token, user._id, formData);
+      const { data } = await UserService.changePassword(token, user._id, formData);
       setFormData(formDataInitialState);
       alert(data.message);
     } catch (error: any) {
-      return alert(error.response?.data.message);
+      return alert(error.response.data.message);
     }
   }
-
-  if (!isLoggedIn) return <NotFound />
 
   return (
     <div className={styles.content}>
@@ -51,6 +46,8 @@ const Security: React.FC = () => {
         <p>It&apos;s a good idea to use a strong password that you&apos;re not using elsewhere.</p>
 
         <form onSubmit={handleFormSubmit}>
+          <input type="email" id="email" name="email" autoComplete="email" disabled hidden />
+
           <div className={styles.field}>
             <input type={isPasswordVisible ? "text" : "password"} id="currentPassword" name="currentPassword" autoComplete="current-password" placeholder=" "
               value={formData.currentPassword} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />

@@ -1,15 +1,17 @@
 import type { GetServerSidePropsContext, NextPage } from "next";
 import { useState, useEffect, useRef, useContext } from "react";
 
+import CategoriesModel from "../models/categories-model";
 import { UserContext } from "../contexts/user-context";
+import type { DashboardPropsInterface as PropsInterface } from "../interfaces";
 
 import styles from "../styles/pages/settings.module.scss";
 import LoadingSpinner from "../components/loading-spinner";
-import Account from "../components/settings/account";
-import Security from "../components/settings/security";
+import Products from "../components/dashboard/products";
+import Categories from "../components/dashboard/categories";
 
-const Settings: NextPage = () => {
-  const { token, user, callback } = useContext(UserContext)
+const Dashboard: NextPage<PropsInterface> = ({ categories }) => {
+  const { token, user } = useContext(UserContext);
 
   const [isLoading, setIsLoading] = useState(true);
   const [activeItem, setActiveItem] = useState(1);
@@ -33,42 +35,48 @@ const Settings: NextPage = () => {
     <div className={styles.page}>
       <div className={styles.topbar}>
         <div className={styles.top_section}>
-          <h1>Settings</h1>
+          <h1>Dashboard</h1>
         </div>
 
         <div className={styles.items}>
           <div className={`${styles.item} ${activeItem === 1 ? styles.active : ""}`} onClick={() => handleItemChange(1)}>
-            <h2 title="Account">Account</h2>
+            <h2 title="Products">Products</h2>
           </div>
 
           <div className={`${styles.item} ${activeItem === 2 ? styles.active : ""}`} onClick={() => handleItemChange(2)}>
-            <h2 title="Security">Security</h2>
+            <h2 title="Categories">Categories</h2>
           </div>
         </div>
       </div>
 
-      <div className={`${styles.wrapper} ${isLoading ? styles.loading : ""}`} ref={wrapperRef}>
+      <div ref={wrapperRef} className={`${styles.wrapper} ${isLoading ? styles.loading : ""}`}>
         {isLoading && <LoadingSpinner />}
-        {activeItem === 1 && <Account token={token} user={user} callback={callback} />}
-        {activeItem === 2 && <Security token={token} user={user} />}
+        {activeItem === 1 && <Products categories={categories} token={token} user={user} />}
+        {activeItem === 2 && <Categories categories={categories} token={token} user={user} />}
       </div>
     </div>
   );
 }
 
-export const getServerSideProps = (context: GetServerSidePropsContext) => {
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const { refreshToken } = context.req.cookies;
 
-  return (
-    !refreshToken ? {
+  if (!refreshToken) {
+    return {
       redirect: {
         destination: "/login",
         permanent: true
       }
-    } : {
-      props: {}
+    };
+  }
+
+  const categories = await CategoriesModel.find().select("name parent");
+
+  return {
+    props: {
+      categories: JSON.parse(JSON.stringify(categories))
     }
-  );
+  };
 }
 
-export default Settings;
+export default Dashboard;

@@ -1,7 +1,7 @@
 import axios from "./axios";
-import { RegisterFormDataInterface, LoginFormDataInterface, AuthResponseInterface } from "../interfaces/auth-interfaces";
+import type { RegisterFormDataInterface, LoginFormDataInterface, AuthResponseInterface } from "../interfaces/auth-interfaces";
 
-class AuthService {
+class AuthServiceClass {
   register(formData: RegisterFormDataInterface) {
     return axios.post<AuthResponseInterface>("/auth/register", formData);
   }
@@ -11,7 +11,7 @@ class AuthService {
   }
 
   logout() {
-    return axios.get<null>("/auth/logout");
+    return axios.get<void>("/auth/logout");
   }
 
   refreshToken() {
@@ -19,4 +19,5 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+const AuthService = new AuthServiceClass();
+export default AuthService;

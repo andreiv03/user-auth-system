@@ -4,6 +4,6 @@ export default axios.create({
   withCredentials: true,
   baseURL: "/api",
   headers: {
-    "Content-type": "application/json"
+    "Content-Type": "application/json"
   }
 });

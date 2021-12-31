@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import type { GetServerSidePropsContext, NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useContext, useEffect } from "react";
@@ -7,11 +7,10 @@ import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
 import AuthService from "../services/auth-service";
 import Handlers from "../utils/handlers";
 import Helpers from "../utils/helpers";
-import { UsersContext } from "../contexts/users-context";
-import { RegisterFormDataInterface as FormData } from "../interfaces/auth-interfaces";
+import { UserContext } from "../contexts/user-context";
+import type { RegisterFormDataInterface as FormData } from "../interfaces/auth-interfaces";
 
 import styles from "../styles/pages/auth.module.scss";
-import NotFound from "../components/not-found";
 
 const formDataInitialState: FormData = {
   firstName: "",
@@ -22,7 +21,7 @@ const formDataInitialState: FormData = {
 
 const Register: NextPage = () => {
   const router = useRouter();
-  const { token: [, setToken], isLoggedIn } = useContext(UsersContext);
+  const { token: [, setToken] } = useContext(UserContext);
 
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -42,15 +41,13 @@ const Register: NextPage = () => {
 
     try {
       const { data } = await AuthService.register(formData);
-      localStorage.setItem("isLoggedIn", "true");
       setToken(data.accessToken);
+      localStorage.setItem("authenticated", "true");
       router.push("/");
     } catch (error: any) {
-      return alert(error.response?.data.message);
+      return alert(error.response.data.message);
     }
   }
-
-  if (isLoggedIn) return <NotFound />
 
   return (
     <div className={styles.page}>
@@ -97,9 +94,22 @@ const Register: NextPage = () => {
         <h3>Go back <Link href="/">Home</Link></h3>
         <h4>By creating an account you agree to the <Link href="/">Terms and Conditions</Link> and <Link href="/">Privacy Policy</Link></h4>
       </div>
-
-      <div className={styles.background} />
     </div>
+  );
+}
+
+export const getServerSideProps = (context: GetServerSidePropsContext) => {
+  const { refreshToken } = context.req.cookies;
+
+  return (
+    refreshToken ? {
+      redirect: {
+        destination: "/",
+        permanent: true
+      }
+    } : {
+      props: {}
+    }
   );
 }
 

@@ -1,30 +1,30 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import bcrypt from "bcrypt";
+import type { NextApiRequest, NextApiResponse } from "next";
 import cookie from "cookie";
+import bcrypt from "bcrypt";
 
-import Users from "../../../models/users-model";
+import UsersModel from "../../../models/users-model";
 import connectDatabase from "../../../utils/database";
-import { signToken } from "../../../utils/token";
+import Token from "../../../utils/token";
 
 const login = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { email, password } = req.body;
 
-    const user = await Users.findOne({ email });
+    const user = await UsersModel.findOne({ email });
     if (!user) return res.status(400).json({ message: "User not found!" });
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ message: "Incorrect password!" });
 
-    const accessToken = await signToken(user._id, "10m");
-    const refreshToken = await signToken(user._id, "7d");
+    const accessToken = await Token.signToken(user._id, "10m");
+    const refreshToken = await Token.signToken(user._id, "7d");
 
     res.setHeader("Set-Cookie", cookie.serialize("refreshToken", refreshToken, {
-      path: "/api/auth/refresh-token",
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
       httpOnly: true,
-      sameSite: "none",
-      secure: true
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development"
     }));
 
     return res.status(200).json({ accessToken });
@@ -33,7 +33,7 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDatabase();
 
   switch (req.method) {
@@ -41,3 +41,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     default: return res.status(404).json({ message: "API route not found!" });
   }
 }
+
+export default handler;

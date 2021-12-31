@@ -1,13 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import UsersService from "../../services/users-service";
+import UserService from "../../services/user-service";
 import Handlers from "../../utils/handlers";
 import Helpers from "../../utils/helpers";
-import { UsersContext } from "../../contexts/users-context";
-import { AccountFormDataInterface as FormData } from "../../interfaces/users-interfaces";
+import type { AccountFormDataInterface as FormData } from "../../interfaces/user-interfaces";
+import type { AccountPropsInterface as PropsInterface } from "../../interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
-import NotFound from "../not-found";
 
 const formDataInitialState: FormData = {
   firstName: "",
@@ -16,8 +15,7 @@ const formDataInitialState: FormData = {
   phoneNumber: ""
 };
 
-const Account: React.FC = () => {
-  const { token: [token], user, isLoggedIn, callback: [callback, setCallback] } = useContext(UsersContext);
+const Account: React.FC<PropsInterface> = ({ token: [token], user, callback: [callback, setCallback] }) => {
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
 
   useEffect(() => {
@@ -47,11 +45,11 @@ const Account: React.FC = () => {
     event.preventDefault();
 
     try {
-      const { data } = await UsersService.updateUser(token, user._id, formData);
+      const { data } = await UserService.updateUser(token, user._id, formData);
       setCallback(!callback);
       alert(data.message);
     } catch (error: any) {
-      return alert(error.response?.data.message);
+      return alert(error.response.data.message);
     }
   }
 
@@ -59,15 +57,13 @@ const Account: React.FC = () => {
     event.preventDefault();
 
     try {
-      const { data } = await UsersService.updateUser(token, user._id, formData);
+      const { data } = await UserService.updateUser(token, user._id, formData);
       setCallback(!callback);
       alert(data.message);
     } catch (error: any) {
-      return alert(error.response?.data.message);
+      return alert(error.response.data.message);
     }
   }
-
-  if (!isLoggedIn) return <NotFound />
 
   return (
     <div className={styles.content}>

@@ -1,12 +1,11 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 import ProductsService from "../../services/products-service";
 import APIs from "../../services/apis";
 import Handlers from "../../utils/handlers";
 import Helpers from "../../utils/helpers";
-import { UsersContext } from "../../contexts/users-context";
-import { CategoriesContext } from "../../contexts/categories-context";
-import { ProductFormDataInterface as FormData } from "../../interfaces/products-interfaces";
+import type { ProductFormDataInterface as FormData } from "../../interfaces/products-interfaces";
+import type { DashboardComponentPropsInterface as PropsInterface } from "../../interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
 import NotFound from "../not-found";
@@ -20,10 +19,7 @@ const formDataInitialState: FormData = {
   category: ""
 };
 
-const Products: React.FC = () => {
-  const { token: [token], user, isLoggedIn } = useContext(UsersContext);
-  const { categories } = useContext(CategoriesContext);
-
+const Products: React.FC<PropsInterface> = ({ token: [token], user, categories }) => {
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
   const [file, setFile] = useState<File>({} as File);
 
@@ -45,11 +41,11 @@ const Products: React.FC = () => {
       setFile({} as File);
       alert(data.message);
     } catch (error: any) {
-      return alert(error.response?.data.message);
+      return alert(error.response.data.message);
     }
   }
 
-  if (!isLoggedIn || !user.isAdmin) return <NotFound />
+  if (!user.isAdmin) return <NotFound />
 
   return (
     <div className={styles.content}>

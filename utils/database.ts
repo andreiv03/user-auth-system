@@ -14,9 +14,9 @@ const connectDatabase = async () => {
   });
 
   mongoose.Promise = global.Promise;
-  mongoose.connection.on("connected", () => console.log("Mongoose connected!"));
+  mongoose.connection.on("connected", () => console.log("Mongoose has successfully connected!"));
   mongoose.connection.on("error", error => console.error(`Mongoose connection error:\n${error.stack}`));
-  mongoose.connection.on("disconnected", () => console.warn("Mongoose disconnected!"));
+  mongoose.connection.on("disconnected", () => console.warn("Mongoose connection lost!"));
 }
 
 export default connectDatabase;

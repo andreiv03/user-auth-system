@@ -1,4 +1,4 @@
-class Helpers {
+class HelpersClass {
   checkEmailValidity(email: string) {
     const result = email.match(/^[\S^@]+@+[\S^@]+\.+[\S^@]+$/);
     return result ? true : false;
@@ -43,4 +43,5 @@ class Helpers {
   }
 }
 
-export default new Helpers();
+const Helpers = new HelpersClass();
+export default Helpers;

@@ -101,7 +101,7 @@
         &:not(:last-child) {
           margin-bottom: 2rem;
           padding-bottom: 2rem;
-          border-bottom: 2px solid var(--line);
+          border-bottom: 2px solid var(--background-two);
         }
 
         h3 {
@@ -139,7 +139,7 @@
 
               label {
                 top: 1.125rem;
-                transform: unset;
+                transform: unset !important;
               }
             }
 

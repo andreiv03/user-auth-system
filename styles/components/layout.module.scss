@@ -4,12 +4,6 @@
   display: flex;
   flex-direction: row;
 
-  &.full {
-    .page {
-      width: 100vw;
-    }
-  }
-
   .page {
     width: calc(100vw - var(--header-width));
     height: 100vh;
@@ -20,12 +14,6 @@
 @media screen and (max-width: 940px) {
   .layout {
     flex-direction: column;
-
-    &.full {
-      .page {
-        height: 100vh;
-      }
-    }
 
     .page {
       width: 100vw;

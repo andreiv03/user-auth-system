@@ -5,14 +5,14 @@ import { RiHomeSmile2Fill, RiSettings3Fill, RiShieldUserFill } from "react-icons
 import { MdOutlineLogout } from "react-icons/md";
 
 import Handlers from "../utils/handlers";
-import { UsersContext } from "../contexts/users-context";
+import { UserContext } from "../contexts/user-context";
 
 import styles from "../styles/components/header.module.scss";
 import Link from "./link";
 
 const Header: React.FC = () => {
   const router = useRouter();
-  const { token: [, setToken], isLoggedIn } = useContext(UsersContext);
+  const { token: [, setToken] } = useContext(UserContext);
 
   return (
     <header className={styles.header}>
@@ -33,7 +33,7 @@ const Header: React.FC = () => {
       </div>
 
       <div className={styles.user}>
-        {isLoggedIn ? (
+        {false ? (
           <div onClick={() => Handlers.handleLogout(router, setToken)}><MdOutlineLogout/></div>
         ) : (
           <Link href="/login"><RiShieldUserFill /></Link>

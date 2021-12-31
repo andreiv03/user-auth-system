@@ -1,7 +1,7 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 import Authorization from "../../../middleware/authorization";
-import Users from "../../../models/users-model";
+import UsersModel from "../../../models/users-model";
 import connectDatabase from "../../../utils/database";
 
 const updateUser = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -9,10 +9,10 @@ const updateUser = async (req: NextApiRequest, res: NextApiResponse) => {
     await Authorization(req, false);
     const { firstName, lastName, email, phoneNumber } = req.body;
       
-    const user = await Users.findById(req.query.id);
+    const user = await UsersModel.findById(req.query.id);
     if (!user) return res.status(400).json({ message: "User not found!" });
 
-    await Users.findByIdAndUpdate(req.query.id, {
+    await UsersModel.findByIdAndUpdate(req.query.id, {
       firstName,
       lastName,
       email,
@@ -25,7 +25,7 @@ const updateUser = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDatabase();
 
   switch (req.method) {
@@ -33,3 +33,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     default: return res.status(404).json({ message: "API route not found!" });
   }
 }
+
+export default handler;

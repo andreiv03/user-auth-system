@@ -1,35 +1,35 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import bcrypt from "bcrypt";
+import type { NextApiRequest, NextApiResponse } from "next";
 import cookie from "cookie";
+import bcrypt from "bcrypt";
 
-import Users from "../../../models/users-model";
+import UsersModel from "../../../models/users-model";
 import connectDatabase from "../../../utils/database";
-import { signToken } from "../../../utils/token";
+import Token from "../../../utils/token";
 
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
-    const user = await Users.findOne({ email });
+    const user = await UsersModel.findOne({ email });
     if (user) return res.status(400).json({ message: "Email address already registered!" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await Users.create({
+    const newUser = await UsersModel.create({
       firstName,
       lastName,
       email,
       password: hashedPassword
     });
 
-    const accessToken = await signToken(newUser._id, "10m");
-    const refreshToken = await signToken(newUser._id, "7d");
+    const accessToken = await Token.signToken(newUser._id, "10m");
+    const refreshToken = await Token.signToken(newUser._id, "7d");
 
     res.setHeader("Set-Cookie", cookie.serialize("refreshToken", refreshToken, {
-      path: "/api/auth/refresh-token",
-      maxAge: 1000 * 60 * 60 * 24 * 7,
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
       httpOnly: true,
-      sameSite: "none",
-      secure: true
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development"
     }));
 
     return res.status(200).json({ accessToken });
@@ -38,7 +38,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDatabase();
   
   switch (req.method) {
@@ -46,3 +46,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     default: return res.status(404).json({ message: "API route not found!" });
   }
 }
+
+export default handler;

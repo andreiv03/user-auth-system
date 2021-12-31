@@ -1,8 +1,10 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { google } from "googleapis";
+import formidable from "formidable";
 import fs from "fs";
 
 import Authorization from "../../../middleware/authorization";
+import Path from "../../../utils/path";
 import { GOOGLE_DRIVE_CLIENT_ID, GOOGLE_DRIVE_CLIENT_SECRET, GOOGLE_DRIVE_REFRESH_TOKEN } from "../../../constants";
 
 const GOOGLE_DRIVE_REDIRECT_URI = "https://developers.google.com/oauthplayground";
@@ -22,39 +24,53 @@ const drive = google.drive({
 const uploadHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await Authorization(req, true);
-    
-    // const { file } = req.body;
+  
+    const file: formidable.File = await new Promise((resolve, reject) => {
+      const formidableOptions = {
+        allowEmptyFiles: false,
+        maxFileSize: 1024 * 1024
+      };
 
-    // const { data: createData } = await drive.files.create({
-    //   requestBody: {
-    //     name: file.name,
-    //     mimeType: file.mimeType
-    //   },
-    //   media: {
-    //     mimeType: file.mimeType,
-    //     body: fs.createReadStream(file.tempFilePath)
-    //   }
-    // });
+      const form = new formidable.IncomingForm(formidableOptions);
+      form.parse(req, async (error, fields, files) => {
+        if (error) reject(error);
+        resolve(files.file as formidable.File);
+      });
+    });
 
-    // await drive.permissions.create({
-    //   fileId: createData.id,
-    //   requestBody: {
-    //     role: "reader",
-    //     type: "anyone"
-    //   }
-    // });
+    if (!file || !file.mimetype) return res.status(400).json({ message: "File not found!" });
 
-    // const { data: getData } = await drive.files.get({
-    //   fileId: createData.id,
-    //   fields: "webViewLink"
-    // });
+    const { data: { id: fileId } } = await drive.files.create({
+      requestBody: {
+        name: file.newFilename,
+        mimeType: file.mimetype
+      },
+      media: {
+        mimeType: file.mimetype,
+        body: fs.createReadStream(file.filepath)
+      }
+    });
 
-    // await path.deleteFilePath(file.tempFilePath);
+    await Path.deleteFilePath(file.filepath);
+    if (!fileId) return res.status(400).json({ message: "Google Drive did not work properly!" });
 
-    // return res.status(200).json({
-    //   fileId: createData.id,
-    //   url: getData.webViewLink
-    // });
+    await drive.permissions.create({
+      fileId,
+      requestBody: {
+        role: "reader",
+        type: "anyone"
+      }
+    });
+
+    const { data } = await drive.files.get({
+      fileId,
+      fields: "webViewLink"
+    });
+
+    return res.status(200).json({
+      fileId,
+      url: data.webViewLink
+    });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
@@ -73,10 +89,18 @@ const deleteHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "POST": return uploadHandler(req, res);
     case "DELETE": return deleteHandler(req, res);
     default: return res.status(404).json({ message: "API route not found!" });
   }
 }
+
+export const config = { // de rezolvat pentru delete
+  api: {
+    bodyParser: false
+  }
+};
+
+export default handler;

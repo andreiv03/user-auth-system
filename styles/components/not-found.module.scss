@@ -1,3 +1,11 @@
 .not_found {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    text-transform: capitalize;
+  }
 }

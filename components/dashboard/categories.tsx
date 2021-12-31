@@ -1,11 +1,10 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { RiEdit2Fill, RiDeleteBinFill } from "react-icons/ri";
 
 import CategoriesService from "../../services/categories-service";
 import Handlers from "../../utils/handlers";
-import { UsersContext } from "../../contexts/users-context";
-import { CategoriesContext } from "../../contexts/categories-context";
-import { CategoriesInterface, CategoryFormDataInterface as FormData } from "../../interfaces/categories-interfaces";
+import type { CategoriesInterface, CategoryFormDataInterface as FormData } from "../../interfaces/categories-interfaces";
+import type { DashboardComponentPropsInterface as PropsInterface } from "../../interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
 import NotFound from "../not-found";
@@ -16,10 +15,7 @@ const formDataInitialState: FormData = {
   parent: ""
 };
 
-const Categories: React.FC = () => {
-  const { token: [token], user, isLoggedIn } = useContext(UsersContext);
-  const { callback: [callback, setCallback], categories } = useContext(CategoriesContext);
-
+const Categories: React.FC<PropsInterface> = ({ token: [token], user, categories }) => {
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
   const [categoryUpdate, setCategoryUpdate] = useState<CategoriesInterface>({} as CategoriesInterface);
 
@@ -44,10 +40,9 @@ const Categories: React.FC = () => {
 
       setFormData(formDataInitialState);
       setCategoryUpdate({} as CategoriesInterface);
-      setCallback(!callback);
       alert(data.message);
     } catch (error: any) {
-      return alert(error.response?.data.message);
+      return alert(error.response.data.message);
     }
   }
 
@@ -61,14 +56,13 @@ const Categories: React.FC = () => {
       const { data } = await CategoriesService.deleteCategory(token, id);
       setFormData(formDataInitialState);
       setCategoryUpdate({} as CategoriesInterface);
-      setCallback(!callback);
       alert(data.message);
     } catch (error: any) {
-      return alert(error.response?.data.message);
+      return alert(error.response.data.message);
     }
   }
 
-  if (!isLoggedIn || !user.isAdmin) return <NotFound />
+  if (!user.isAdmin) return <NotFound />
 
   return (
     <div className={styles.content}>

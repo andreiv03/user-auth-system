@@ -1,18 +1,18 @@
-import { NextApiRequest } from "next";
+import type { NextApiRequest } from "next";
 
-import Users from "../models/users-model";
-import { verifyToken } from "../utils/token";
+import UsersModel from "../models/users-model";
+import Token from "../utils/token";
 import { ADMINS } from "../constants";
 
 const Authorization = async (req: NextApiRequest, adminRequired: boolean) => {
   const authorization = req.headers.authorization;
   if (!authorization) throw new Error("Unauthorized!");
 
-  const decoded = await verifyToken(authorization).catch(() => {
+  const decoded = await Token.verifyToken(authorization).catch(() => {
     throw new Error("Unauthorized!");
   });
 
-  const user = await Users.findById(decoded.sub);
+  const user = await UsersModel.findById(decoded.sub);
   if (!user) throw new Error("User not found!");
 
   if (adminRequired) {
