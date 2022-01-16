@@ -1,18 +1,4 @@
-import { NextRouter } from "next/router";
-import AuthService from "../services/auth-service";
-
 class HandlersClass {
-  async handleLogout(router: NextRouter, setToken: React.Dispatch<React.SetStateAction<string>>) {
-    try {
-      await AuthService.logout();
-      localStorage.removeItem("isLoggedIn");
-      setToken("");
-      router.push("/");
-    } catch (error: any) {
-      return alert(error.response.data.message);
-    }
-  }
-
   handleFormDataChange(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, setState: React.Dispatch<React.SetStateAction<any>>) {
     return setState((prevState: any) => ({
       ...prevState,

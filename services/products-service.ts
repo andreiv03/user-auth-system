@@ -1,13 +1,13 @@
 import axios from "./axios";
 import type { ProductsInterface, ProductFormDataInterface } from "../interfaces/products-interfaces";
-import type { MessageResponseInterface, GoogleDriveUploadInterface } from "../interfaces";
+import type { MessageResponseInterface, FileUploadInterface } from "../interfaces";
 
 class ProductsServiceClass {
   getProducts() {
     return axios.get<ProductsInterface[]>("/products");
   }
 
-  createProduct(token: string, formData: ProductFormDataInterface, image: GoogleDriveUploadInterface) {
+  createProduct(token: string, formData: ProductFormDataInterface, image: FileUploadInterface) {
     return axios.post<MessageResponseInterface>("/products", { ...formData, image }, {
       headers: { Authorization: token }
     });

@@ -5,10 +5,9 @@ import APIs from "../../services/apis";
 import Handlers from "../../utils/handlers";
 import Helpers from "../../utils/helpers";
 import type { ProductFormDataInterface as FormData } from "../../interfaces/products-interfaces";
-import type { DashboardComponentPropsInterface as PropsInterface } from "../../interfaces";
+import type { ProductsPropsInterface as PropsInterface } from "../../interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
-import NotFound from "../not-found";
 import SelectInput from "../select-input";
 
 const formDataInitialState: FormData = {
@@ -19,7 +18,7 @@ const formDataInitialState: FormData = {
   category: ""
 };
 
-const Products: React.FC<PropsInterface> = ({ token: [token], user, categories }) => {
+const Products: React.FC<PropsInterface> = ({ token, categories }) => {
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
   const [file, setFile] = useState<File>({} as File);
 
@@ -45,13 +44,11 @@ const Products: React.FC<PropsInterface> = ({ token: [token], user, categories }
     }
   }
 
-  if (!user.isAdmin) return <NotFound />
-
   return (
     <div className={styles.content}>
       <div className={styles.section}>
         <h3>Create product</h3>
-        <p>From here you can create a new product.</p>
+        <p>From here you can create new products.</p>
 
         <form onSubmit={handleFormSubmit} autoComplete="off">
           <div className={styles.file}>

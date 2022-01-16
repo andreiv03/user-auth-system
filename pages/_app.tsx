@@ -1,5 +1,4 @@
 import type { AppProps } from "next/app";
-
 import { UserProvider } from "../contexts/user-context";
 
 import "../styles/globals.scss";

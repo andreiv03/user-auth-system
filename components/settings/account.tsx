@@ -15,7 +15,7 @@ const formDataInitialState: FormData = {
   phoneNumber: ""
 };
 
-const Account: React.FC<PropsInterface> = ({ token: [token], user, callback: [callback, setCallback] }) => {
+const Account: React.FC<PropsInterface> = ({ token, user, callback: [callback, setCallback] }) => {
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
 
   useEffect(() => {

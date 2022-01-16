@@ -6,17 +6,21 @@ import type { UserInterface } from "../interfaces/user-interfaces";
 
 interface ProviderStateInterface {
   token: [string, React.Dispatch<React.SetStateAction<string>>];
-  user: UserInterface;
+  user: [UserInterface, React.Dispatch<React.SetStateAction<UserInterface>>];
   callback: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 };
 
-const userInitialState: UserInterface = {
+export const userInitialState: UserInterface = {
   _id: "",
   firstName: "",
   lastName: "",
   email: "",
   phoneNumber: "",
-  isAdmin: false
+  isAdmin: false,
+  avatar: {
+    fileId: "",
+    url: ""
+  }
 };
 
 export const UserContext = createContext<ProviderStateInterface>({} as ProviderStateInterface);
@@ -44,7 +48,7 @@ export const UserProvider: React.FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!token || user._id) return;
+    if (!token) return;
 
     const getUser = async () => {
       try {
@@ -60,7 +64,7 @@ export const UserProvider: React.FC = ({ children }) => {
 
   const state: ProviderStateInterface = {
     token: [token, setToken],
-    user,
+    user: [user, setUser],
     callback: [callback, setCallback]
   };
 

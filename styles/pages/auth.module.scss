@@ -2,11 +2,11 @@
   width: 100%;
   height: 100%;
 
-  .content {
+  .wrapper {
     max-width: 500px;
     height: 100%;
     margin: 0 auto;
-    padding: 2rem;
+    display: grid;
     overflow: auto;
     scrollbar-width: none;
 
@@ -14,198 +14,38 @@
       display: none;
     }
 
-    h1 {
-      margin-bottom: 0.2rem;
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
+    .content {
+      height: fit-content;
+      margin: auto;
+      padding: 2rem;
 
-    p {
-      color: var(--foreground-two);
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    h3 {
-      color: var(--foreground-two);
-      font-size: 0.9rem;
-      font-weight: 500;
-      text-align: center;
-
-      &:not(:last-child) {
+      h1 {
         margin-bottom: 0.2rem;
+        font-size: 1.5rem;
+        font-weight: 700;
       }
 
-      a {
-        color: var(--foreground-one);
-        font-weight: 600;
-        text-transform: uppercase;
-        text-decoration: none;
-        transition: 100ms ease-in;
+      p {
+        color: var(--foreground-two);
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
 
-        &:hover {
-          color: var(--accent);
+      h3 {
+        color: var(--foreground-two);
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-align: center;
+
+        &:not(:last-child) {
+          margin-bottom: 0.2rem;
         }
-      }
-    }
 
-    h4 {
-      max-width: 300px;
-      margin: 1rem auto 0;
-      color: var(--foreground-two);
-      font-size: 0.6rem;
-      font-weight: 500;
-      text-align: center;
-
-      a {
-        color: var(--foreground-one);
-        font-weight: 600;
-        text-transform: uppercase;
-        text-decoration: none;
-        transition: 100ms ease-in;
-
-        &:hover {
-          color: var(--accent);
-        }
-      }
-    }
-
-    .form {
-      width: 100%;
-      margin: 1rem 0 2rem;
-      display: flex;
-      flex-direction: column;
-
-      .field {
-        position: relative;
-        width: 100%;
-        height: 3.75rem;
-        margin-bottom: 1rem;
-
-        input {
-          width: 100%;
-          height: 100%;
-          padding: 1rem 1rem 0;
-          background: var(--background-two);
-          font-size: 1rem;
+        a {
+          color: var(--foreground-one);
           font-weight: 600;
-
-          &[name="email"],
-          &[name="phoneNumber"] {
-            padding-right: 2.75rem;
-          }
-
-          &[type="password"] {
-            padding-right: 6rem;
-          }
-
-          &:-webkit-autofill {
-            box-shadow: 0 0 0 30px var(--background-two) inset !important;
-          }
-
-          &:focus ~ label,
-          &:not(:placeholder-shown) ~ label {
-            transform: translateY(-137%);
-            color: var(--foreground-two);
-            font-size: 0.6rem;
-          }
-
-          &[type="password"] ~ .validity {
-            transition: 100ms ease-in;
-          }
-        }
-
-        label {
-          position: absolute;
-          top: 50%;
-          left: 1rem;
-          transform: translateY(-50%);
-          font-size: 1rem;
-          font-weight: 600;
-          text-transform: capitalize;
-          pointer-events: none;
-          user-select: none;
-          transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-
-          .weak {
-            color: var(--error);
-          }
-
-          .medium {
-            color: var(--warning);
-          }
-
-          .strong {
-            color: var(--valid);
-          }
-        }
-
-        .validity {
-          position: absolute;
-          top: 50%;
-          right: 1rem;
-          transform: translateY(-50%);
-          width: 1rem;
-          height: 1rem;
-          border-radius: 50%;
-
-          &.false {
-            background: var(--error);
-
-            &::before {
-              content: "✖";
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-              color: var(--background-two);
-              font-size: 0.55rem;
-            }
-          }
-
-          &.true {
-            background: var(--valid);
-
-            &::before {
-              content: "✔";
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-              color: var(--background-two);
-              font-size: 0.55rem;
-            }
-          }
-
-          &.weak {
-            background: var(--error);
-          }
-
-          &.medium {
-            background: var(--warning);
-          }
-
-          &.strong {
-            background: var(--valid);
-          }
-
-          &.weak ~ .show_button,
-          &.medium ~ .show_button,
-          &.strong ~ .show_button {
-            right: 2.75rem;
-          }
-        }
-
-        .show_button {
-          position: absolute;
-          top: 50%;
-          right: calc(1rem - 2px);
-          transform: translateY(-50%);
-          font-size: 1.25rem;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          cursor: pointer;
+          text-transform: uppercase;
+          text-decoration: none;
           transition: 100ms ease-in;
 
           &:hover {
@@ -214,24 +54,189 @@
         }
       }
 
-      button {
-        width: 100%;
-        height: 3.75rem;
-        background: var(--foreground-one);
-        color: var(--background-one);
-        font-weight: 600;
+      h4 {
+        max-width: 300px;
+        margin: 1rem auto 0;
+        color: var(--foreground-two);
+        font-size: 0.6rem;
+        font-weight: 500;
         text-align: center;
-        text-transform: capitalize;
-        cursor: pointer;
-        transition: 100ms ease-in;
 
-        &:hover {
-          background: var(--accent);
+        a {
+          color: var(--foreground-one);
+          font-weight: 600;
+          text-transform: uppercase;
+          text-decoration: none;
+          transition: 100ms ease-in;
+
+          &:hover {
+            color: var(--accent);
+          }
+        }
+      }
+
+      .form {
+        width: 100%;
+        margin: 1rem 0 2rem;
+        display: flex;
+        flex-direction: column;
+
+        .field {
+          position: relative;
+          width: 100%;
+          height: 3.75rem;
+          margin-bottom: 1rem;
+
+          input {
+            width: 100%;
+            height: 100%;
+            padding: 1rem 1rem 0;
+            background: var(--background-two);
+            font-size: 1rem;
+            font-weight: 600;
+
+            &[name="email"],
+            &[name="phoneNumber"] {
+              padding-right: 2.75rem;
+            }
+
+            &[type="password"] {
+              padding-right: 6rem;
+            }
+
+            &:-webkit-autofill {
+              box-shadow: 0 0 0 30px var(--background-two) inset !important;
+            }
+
+            &:focus ~ label,
+            &:not(:placeholder-shown) ~ label {
+              transform: translateY(-137%);
+              color: var(--foreground-two);
+              font-size: 0.6rem;
+            }
+
+            &[type="password"] ~ .validity {
+              transition: 100ms ease-in;
+            }
+          }
+
+          label {
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            pointer-events: none;
+            user-select: none;
+
+            .weak {
+              color: var(--error);
+            }
+
+            .medium {
+              color: var(--warning);
+            }
+
+            .strong {
+              color: var(--valid);
+            }
+          }
+
+          .validity {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+
+            &.false {
+              background: var(--error);
+
+              &::before {
+                content: "✖";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: var(--background-two);
+                font-size: 0.55rem;
+              }
+            }
+
+            &.true {
+              background: var(--valid);
+
+              &::before {
+                content: "✔";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: var(--background-two);
+                font-size: 0.55rem;
+              }
+            }
+
+            &.weak {
+              background: var(--error);
+            }
+
+            &.medium {
+              background: var(--warning);
+            }
+
+            &.strong {
+              background: var(--valid);
+            }
+
+            &.weak ~ .show_button,
+            &.medium ~ .show_button,
+            &.strong ~ .show_button {
+              right: 2.75rem;
+            }
+          }
+
+          .show_button {
+            position: absolute;
+            top: 50%;
+            right: calc(1rem - 2px);
+            transform: translateY(-50%);
+            font-size: 1.25rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 100ms ease-in;
+
+            &:hover {
+              color: var(--accent);
+            }
+          }
         }
 
-        &:disabled:hover {
-          background: var(--error);
-          cursor: not-allowed;
+        button {
+          width: 100%;
+          height: 3.75rem;
+          background: var(--foreground-one);
+          color: var(--background-one);
+          font-weight: 600;
+          text-align: center;
+          text-transform: capitalize;
+          cursor: pointer;
+          transition: 100ms ease-in;
+
+          &:hover {
+            background: var(--accent);
+          }
+
+          &:disabled:hover {
+            background: var(--error);
+            cursor: not-allowed;
+          }
         }
       }
     }

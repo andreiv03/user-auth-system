@@ -31,6 +31,10 @@ const usersSchema = new mongoose.Schema({
     trim: true,
     default: ""
   },
+  avatar: {
+    type: Object,
+    required: true
+  },
   cart: {
     type: Array,
     default: []

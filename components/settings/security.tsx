@@ -14,7 +14,7 @@ const formDataInitialState: FormData = {
   newPassword: ""
 };
 
-const Security: React.FC<PropsInterface> = ({ token: [token], user }) => {
+const Security: React.FC<PropsInterface> = ({ token, user }) => {
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [newPasswordStrength, setNewPasswordStrength] = useState("");

@@ -1,33 +1,34 @@
 import type { UserInterface } from "./user-interfaces";
 import type { CategoriesInterface } from "./categories-interfaces";
 
-// APIs
 export interface MessageResponseInterface {
   message: string;
 };
 
-export interface GoogleDriveUploadInterface {
+export interface FileUploadInterface {
   fileId: string;
   url: string;
 };
 
 // Components
 export interface AccountPropsInterface {
-  token: [string, React.Dispatch<React.SetStateAction<string>>];
+  token: string;
   user: UserInterface;
   callback: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 };
 
 export interface SecurityPropsInterface {
-  token: [string, React.Dispatch<React.SetStateAction<string>>];
+  token: string;
   user: UserInterface;
 };
 
-export interface DashboardPropsInterface {
+export interface ProductsPropsInterface {
+  token: string;
   categories: CategoriesInterface[];
 };
 
-export interface DashboardComponentPropsInterface extends DashboardPropsInterface {
-  token: [string, React.Dispatch<React.SetStateAction<string>>];
-  user: UserInterface;
+export interface CategoriesPropsInterface {
+  token: string;
+  categories: CategoriesInterface[];
+  callback: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 };

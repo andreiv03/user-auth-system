@@ -7,7 +7,7 @@ import connectDatabase from "../../../utils/database";
 const updateUser = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await Authorization(req, false);
-    const { firstName, lastName, email, phoneNumber } = req.body;
+    const { firstName, lastName, email, phoneNumber, avatar } = req.body;
       
     const user = await UsersModel.findById(req.query.id);
     if (!user) return res.status(400).json({ message: "User not found!" });
@@ -16,7 +16,8 @@ const updateUser = async (req: NextApiRequest, res: NextApiResponse) => {
       firstName,
       lastName,
       email,
-      phoneNumber
+      phoneNumber,
+      avatar
     });
 
     return res.status(200).json({ message: "Account updated!" });

@@ -1,6 +1,6 @@
 import axios from "./axios";
 import type { UserInterface, AccountFormDataInterface, PasswordFormDataInterface } from "../interfaces/user-interfaces";
-import type { MessageResponseInterface } from "../interfaces";
+import type { FileUploadInterface, MessageResponseInterface } from "../interfaces";
 
 class UserServiceClass {
   getUser(token: string) {
@@ -11,6 +11,12 @@ class UserServiceClass {
 
   updateUser(token: string, id: string, formData: AccountFormDataInterface) {
     return axios.patch<MessageResponseInterface>(`/user/${id}`, formData, {
+      headers: { Authorization: token }
+    });
+  }
+
+  updateAvatar(token: string, id: string, avatar: FileUploadInterface) {
+    return axios.patch<MessageResponseInterface>(`/user/${id}`, { avatar }, {
       headers: { Authorization: token }
     });
   }

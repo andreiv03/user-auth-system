@@ -18,7 +18,11 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       firstName,
       lastName,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      avatar: {
+        fileId: "",
+        url: ""
+      }
     });
 
     const accessToken = await Token.signToken(newUser._id, "10m");

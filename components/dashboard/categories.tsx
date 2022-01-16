@@ -4,10 +4,9 @@ import { RiEdit2Fill, RiDeleteBinFill } from "react-icons/ri";
 import CategoriesService from "../../services/categories-service";
 import Handlers from "../../utils/handlers";
 import type { CategoriesInterface, CategoryFormDataInterface as FormData } from "../../interfaces/categories-interfaces";
-import type { DashboardComponentPropsInterface as PropsInterface } from "../../interfaces";
+import type { CategoriesPropsInterface as PropsInterface } from "../../interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
-import NotFound from "../not-found";
 import SelectInput from "../select-input";
 
 const formDataInitialState: FormData = {
@@ -15,7 +14,7 @@ const formDataInitialState: FormData = {
   parent: ""
 };
 
-const Categories: React.FC<PropsInterface> = ({ token: [token], user, categories }) => {
+const Categories: React.FC<PropsInterface> = ({ token, categories, callback: [callback, setCallback] }) => {
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
   const [categoryUpdate, setCategoryUpdate] = useState<CategoriesInterface>({} as CategoriesInterface);
 
@@ -40,6 +39,7 @@ const Categories: React.FC<PropsInterface> = ({ token: [token], user, categories
 
       setFormData(formDataInitialState);
       setCategoryUpdate({} as CategoriesInterface);
+      setCallback(!callback);
       alert(data.message);
     } catch (error: any) {
       return alert(error.response.data.message);
@@ -56,13 +56,12 @@ const Categories: React.FC<PropsInterface> = ({ token: [token], user, categories
       const { data } = await CategoriesService.deleteCategory(token, id);
       setFormData(formDataInitialState);
       setCategoryUpdate({} as CategoriesInterface);
+      setCallback(!callback);
       alert(data.message);
     } catch (error: any) {
       return alert(error.response.data.message);
     }
   }
-
-  if (!user.isAdmin) return <NotFound />
 
   return (
     <div className={styles.content}>

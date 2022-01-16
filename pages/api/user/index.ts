@@ -10,7 +10,7 @@ const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
     const authorization = await Authorization(req, false);
     if (!ADMINS) throw new Error("Admins list not found!");
 
-    const user = await UsersModel.findById(authorization.id).select("firstName lastName email phoneNumber").select("-password");
+    const user = await UsersModel.findById(authorization.id).select("firstName lastName email phoneNumber avatar").select("-password");
     if (!user) return res.status(400).json({ message: "User not found!" });
 
     return res.status(200).json({

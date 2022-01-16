@@ -5,6 +5,10 @@ export interface UserInterface {
   email: string;
   phoneNumber: string;
   isAdmin: boolean;
+  avatar: {
+    fileId: string;
+    url: string;
+  };
 };
 
 export interface AccountFormDataInterface {

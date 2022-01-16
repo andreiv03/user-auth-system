@@ -1,35 +1,60 @@
-import type { GetServerSidePropsContext, NextPage } from "next";
+import type { NextPage } from "next";
 import { useState, useEffect, useRef, useContext } from "react";
 
-import CategoriesModel from "../models/categories-model";
+import CategoriesService from "../services/categories-service";
 import { UserContext } from "../contexts/user-context";
-import type { DashboardPropsInterface as PropsInterface } from "../interfaces";
 
 import styles from "../styles/pages/settings.module.scss";
+import NotFound from "../components/not-found";
 import LoadingSpinner from "../components/loading-spinner";
 import Products from "../components/dashboard/products";
 import Categories from "../components/dashboard/categories";
+import { CategoriesInterface } from "../interfaces/categories-interfaces";
 
-const Dashboard: NextPage<PropsInterface> = ({ categories }) => {
-  const { token, user } = useContext(UserContext);
+const categoriesInitialState: CategoriesInterface[] = [{
+  _id: "",
+  name: "",
+  parent: ""
+}];
 
+const Dashboard: NextPage = () => {
+  const { token: [token], user: [user] } = useContext(UserContext);
+  const wrapperRef = useRef({} as HTMLDivElement);
+
+  const [categories, setCategories] = useState<CategoriesInterface[]>(categoriesInitialState);
+  const [callback, setCallback] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [activeItem, setActiveItem] = useState(1);
 
-  const wrapperRef = useRef({} as HTMLDivElement);
+  useEffect(() => {
+    if (!user._id || !user.isAdmin) return;
+
+    const getCategories = async () => {
+      try {
+        const { data } = await CategoriesService.getCategories();
+        setCategories(data);
+      } catch (error: any) {
+        return alert(error.response.data.message);
+      }
+    }
+
+    getCategories();
+  }, [user, callback]);
 
   useEffect(() => {
-    const handleLoading = setTimeout(() => setIsLoading(false), 500);
-    return () => clearTimeout(handleLoading);
+    const loadingTimeout = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(loadingTimeout);
   }, [isLoading]);
 
-  const handleItemChange = (id: number) => {
-    if (!isLoading && id !== activeItem) {
+  const handleItemChange = (item: number) => {
+    if (!isLoading && activeItem !== item) {
       wrapperRef.current.scroll(0, 0);
       setIsLoading(true);
-      setActiveItem(id);
+      setActiveItem(item);
     }
   }
+
+  if (!user._id || !user.isAdmin) return <NotFound condition={user.isAdmin} />
 
   return (
     <div className={styles.page}>
@@ -51,32 +76,11 @@ const Dashboard: NextPage<PropsInterface> = ({ categories }) => {
 
       <div ref={wrapperRef} className={`${styles.wrapper} ${isLoading ? styles.loading : ""}`}>
         {isLoading && <LoadingSpinner />}
-        {activeItem === 1 && <Products categories={categories} token={token} user={user} />}
-        {activeItem === 2 && <Categories categories={categories} token={token} user={user} />}
+        {activeItem === 1 && <Products token={token} categories={categories} />}
+        {activeItem === 2 && <Categories token={token} categories={categories} callback={[callback, setCallback]} />}
       </div>
     </div>
   );
-}
-
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
-  const { refreshToken } = context.req.cookies;
-
-  if (!refreshToken) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: true
-      }
-    };
-  }
-
-  const categories = await CategoriesModel.find().select("name parent");
-
-  return {
-    props: {
-      categories: JSON.parse(JSON.stringify(categories))
-    }
-  };
 }
 
 export default Dashboard;

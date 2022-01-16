@@ -76,28 +76,14 @@ const uploadHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-const deleteHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  try {
-    await Authorization(req, true);
-
-    const { fileId } = req.body;
-    await drive.files.delete({ fileId });
-    
-    return res.status(200).json({ message: "Image deleted!" });
-  } catch (error: any) {
-    return res.status(500).json({ message: error.message });
-  }
-}
-
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "POST": return uploadHandler(req, res);
-    case "DELETE": return deleteHandler(req, res);
     default: return res.status(404).json({ message: "API route not found!" });
   }
 }
 
-export const config = { // de rezolvat pentru delete
+export const config = {
   api: {
     bodyParser: false
   }

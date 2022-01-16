@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RiDeleteBack2Fill } from "react-icons/ri";
+import { RiDeleteBinFill } from "react-icons/ri";
 
 interface Props {
   styles: {
@@ -30,7 +30,7 @@ const SelectInput: React.FC<Props> = ({ styles, options, name, value, disabled, 
       <input type="text" id={name} name={name} placeholder=" " value={value} readOnly
         className={isActive ? styles.active : ""} onClick={() => setIsActive(!isActive)} />
       <label htmlFor="parent">Parent category</label>
-      <div className={styles.remove_button} onClick={() => handleItemChange("")}>{value ? <RiDeleteBack2Fill /> : ""}</div>
+      <div className={styles.remove_button} onClick={() => handleItemChange("")}>{value ? <RiDeleteBinFill /> : ""}</div>
 
       {isActive && (
         <div className={styles.select_items}>
