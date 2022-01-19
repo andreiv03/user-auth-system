@@ -3,15 +3,10 @@ import { useEffect } from "react";
 
 import styles from "../styles/components/not-found.module.scss";
 
-interface PropsInterface {
-  condition: boolean;
-};
-
-const NotFound: React.FC<PropsInterface> = ({ condition }) => {
+const NotFound: React.FC = () => {
   const router = useRouter();
   
   useEffect(() => {
-    if (condition) return;
     const redirectTimeout = setTimeout(() => router.push("/"), 3000);
     return () => clearTimeout(redirectTimeout);
   }, []);

@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { RiEyeOffFill, RiEyeFill } from "react-icons/ri";
 
-import UserService from "../../services/user-service";
-import Handlers from "../../utils/handlers";
-import Helpers from "../../utils/helpers";
 import type { PasswordFormDataInterface as FormData } from "../../interfaces/user-interfaces";
 import type { SecurityPropsInterface as PropsInterface } from "../../interfaces";
 
@@ -19,10 +16,23 @@ const Security: React.FC<PropsInterface> = ({ token, user }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [newPasswordStrength, setNewPasswordStrength] = useState("");
 
-  useEffect(() => setNewPasswordStrength(Helpers.checkPasswordStrength(formData.newPassword)), [formData.newPassword]);
+  useEffect(() => {
+    if (!formData.newPassword) return;
+
+    const checkPasswordStrength = async () => {
+      const { default: Helpers } = await import("../../utils/helpers");
+      setNewPasswordStrength(Helpers.checkPasswordStrength(formData.newPassword));
+    }
+
+    checkPasswordStrength();
+  }, [formData.newPassword]);
+
+  const handlePasswordStrengthClassNames = () =>
+    formData.newPassword ? newPasswordStrength === "Weak" ? styles.weak : newPasswordStrength === "Medium" ? styles.medium : styles.strong : "";
 
   const handleFormValidity = () => {
     if (!formData.currentPassword || !formData.newPassword) return true;
+    if (formData.currentPassword === formData.newPassword) return true;
     if (newPasswordStrength === "Weak") return true;
     return false;
   }
@@ -31,6 +41,7 @@ const Security: React.FC<PropsInterface> = ({ token, user }) => {
     event.preventDefault();
 
     try {
+      const { default: UserService } = await import("../../services/user-service");
       const { data } = await UserService.changePassword(token, user._id, formData);
       setFormData(formDataInitialState);
       alert(data.message);
@@ -49,21 +60,48 @@ const Security: React.FC<PropsInterface> = ({ token, user }) => {
           <input type="email" id="email" name="email" autoComplete="email" disabled hidden />
 
           <div className={styles.field}>
-            <input type={isPasswordVisible ? "text" : "password"} id="currentPassword" name="currentPassword" autoComplete="current-password" placeholder=" "
-              value={formData.currentPassword} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+            <input
+              type={isPasswordVisible ? "text" : "password"}
+              id="currentPassword"
+              name="currentPassword"
+              autoComplete="current-password"
+              placeholder=" "
+              value={formData.currentPassword}
+              onChange={async event => {
+                const { name, value } = event.target;
+                const { default: Handlers } = await import("../../utils/handlers");
+                Handlers.handleFormDataChange(name, value, setFormData);
+              }}
+            />
             <label htmlFor="password">Current password</label>
 
-            <div className={styles.show_button} onClick={() => setIsPasswordVisible(!isPasswordVisible)}>{isPasswordVisible ? <RiEyeOffFill /> : <RiEyeFill />}</div>
+            <div className={styles.show_button} onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
+              {isPasswordVisible ? <RiEyeOffFill /> : <RiEyeFill />}
+            </div>
           </div>
 
           <div className={styles.field}>
-            <input type={isPasswordVisible ? "text" : "password"} id="newPassword" name="newPassword" autoComplete="new-password" placeholder=" "
-              value={formData.newPassword} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
-            <label htmlFor="newPassword">New Password {formData.newPassword && <span className={`${formData.newPassword ? newPasswordStrength === "Weak" ? styles.weak : newPasswordStrength === "Medium" ? styles.medium : styles.strong : ""}`}>({newPasswordStrength})</span>}</label>
+            <input
+              type={isPasswordVisible ? "text" : "password"}
+              id="newPassword"
+              name="newPassword"
+              autoComplete="new-password"
+              placeholder=" "
+              value={formData.newPassword}
+              onChange={async event => {
+                const { name, value } = event.target;
+                const { default: Handlers } = await import("../../utils/handlers");
+                Handlers.handleFormDataChange(name, value, setFormData);
+              }}
+            />
+            <label htmlFor="newPassword">
+              New Password {formData.newPassword && <span className={handlePasswordStrengthClassNames()}>({newPasswordStrength})</span>}
+            </label>
 
-            <div className={`${styles.validity}
-              ${formData.newPassword ? newPasswordStrength === "Weak" ? styles.weak : newPasswordStrength === "Medium" ? styles.medium : styles.strong : ""}`} />
-            <div className={styles.show_button} onClick={() => setIsPasswordVisible(!isPasswordVisible)}>{isPasswordVisible ? <RiEyeOffFill /> : <RiEyeFill />}</div>
+            <div className={`${styles.validity} ${handlePasswordStrengthClassNames()}`} />
+            <div className={styles.show_button} onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
+              {isPasswordVisible ? <RiEyeOffFill /> : <RiEyeFill />}
+            </div>
           </div>
 
           <button type="submit" disabled={handleFormValidity()}>Update</button>

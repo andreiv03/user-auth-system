@@ -21,7 +21,7 @@ const drive = google.drive({
 const deleteHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await Authorization(req, true);
-    drive.files.delete({ fileId: req.query.id as string });
+    await drive.files.delete({ fileId: req.query.id as string });
     return res.status(200).json({ message: "Image deleted!" });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });

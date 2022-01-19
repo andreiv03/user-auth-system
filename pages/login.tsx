@@ -1,16 +1,15 @@
 import type { NextPage } from "next";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
 
-import AuthService from "../services/auth-service";
-import Handlers from "../utils/handlers";
 import { UserContext } from "../contexts/user-context";
 import type { LoginFormDataInterface as FormData } from "../interfaces/auth-interfaces";
 
 import styles from "../styles/pages/auth.module.scss";
-import NotFound from "../components/not-found";
+const NotFound = dynamic(() => import("../components/not-found"));
 
 const formDataInitialState: FormData = {
   email: "",
@@ -28,6 +27,7 @@ const Login: NextPage = () => {
     event.preventDefault();
 
     try {
+      const { default: AuthService } = await import("../services/auth-service");
       const { data } = await AuthService.login(formData);
       setToken(data.accessToken);
       localStorage.setItem("authenticated", "true");
@@ -37,7 +37,7 @@ const Login: NextPage = () => {
     }
   }
 
-  if (user._id) return <NotFound condition={!user._id} />
+  if (user._id) return <NotFound />
 
   return (
     <div className={styles.page}>
@@ -48,17 +48,41 @@ const Login: NextPage = () => {
         
           <form className={styles.form} onSubmit={handleFormSubmit} noValidate>
             <div className={styles.field}>
-              <input type="email" id="email" name="email" autoComplete="email" placeholder=" "
-                value={formData.email} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+              <input
+                type="email"
+                id="email"
+                name="email"
+                autoComplete="email"
+                placeholder=" "
+                value={formData.email}
+                onChange={async event => {
+                  const { name, value } = event.target;
+                  const { default: Handlers } = await import("../utils/handlers");
+                  Handlers.handleFormDataChange(name, value, setFormData);
+                }}
+              />
               <label htmlFor="email">Email</label>
             </div>
 
             <div className={styles.field}>
-              <input type={isPasswordVisible ? "text" : "password"} id="password" name="password" autoComplete="current-password" placeholder=" "
-                value={formData.password} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+              <input
+                type={isPasswordVisible ? "text" : "password"}
+                id="password"
+                name="password"
+                autoComplete="current-password"
+                placeholder=" "
+                value={formData.password}
+                onChange={async event => {
+                  const { name, value } = event.target;
+                  const { default: Handlers } = await import("../utils/handlers");
+                  Handlers.handleFormDataChange(name, value, setFormData);
+                }}
+              />
               <label htmlFor="password">Password</label>
 
-              <div className={styles.show_button} onClick={() => setIsPasswordVisible(!isPasswordVisible)}>{isPasswordVisible ? <RiEyeOffFill /> : <RiEyeFill />}</div>
+              <div className={styles.show_button} onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
+                {isPasswordVisible ? <RiEyeOffFill /> : <RiEyeFill />}
+              </div>
             </div>
 
             <button type="submit" disabled={!formData.email || !formData.password}>Sign in</button>

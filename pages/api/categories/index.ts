@@ -6,7 +6,7 @@ import connectDatabase from "../../../utils/database";
 
 const getCategories = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const categories = await Categories.find().select("name parent");
+    const categories = await Categories.find().select("name parent").lean();
     if (!categories) return res.status(400).json({ message: "No categories were found!" });
 
     return res.status(200).json(categories);
@@ -20,11 +20,11 @@ const createCategory = async (req: NextApiRequest, res: NextApiResponse) => {
     await Authorization(req, true);
     const { name, parent } = req.body;
 
-    const category = await Categories.findOne({ name });
+    const category = await Categories.exists({ name: name.toLowerCase() });
     if (category) return res.status(400).json({ message: "This category already exists!" });
   
     await Categories.create({
-      name,
+      name: name.toLowerCase(),
       parent
     });
 
@@ -34,7 +34,7 @@ const createCategory = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDatabase();
 
   switch (req.method) {
@@ -43,3 +43,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     default: return res.status(404).json({ message: "API route not found!" });
   }
 }
+
+export default handler;

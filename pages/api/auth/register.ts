@@ -10,7 +10,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
-    const user = await UsersModel.findOne({ email });
+    const user = await UsersModel.exists({ email });
     if (user) return res.status(400).json({ message: "Email address already registered!" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -18,11 +18,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       firstName,
       lastName,
       email,
-      password: hashedPassword,
-      avatar: {
-        fileId: "",
-        url: ""
-      }
+      password: hashedPassword
     });
 
     const accessToken = await Token.signToken(newUser._id, "10m");

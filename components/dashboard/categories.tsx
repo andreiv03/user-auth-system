@@ -72,7 +72,7 @@ const Categories: React.FC<PropsInterface> = ({ token, categories, callback: [ca
         <form onSubmit={handleFormSubmit} autoComplete="off">
           <div className={styles.field}>
             <input type="text" id="name" name="name" placeholder=" "
-              value={formData.name} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+              value={formData.name} onChange={event => Handlers.handleFormDataChange(event.target.name, event.target.value, setFormData)} />
             <label htmlFor="name">Name</label>
           </div>
 

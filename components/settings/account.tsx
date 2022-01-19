@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
 
-import UserService from "../../services/user-service";
-import Handlers from "../../utils/handlers";
-import Helpers from "../../utils/helpers";
 import type { AccountFormDataInterface as FormData } from "../../interfaces/user-interfaces";
 import type { AccountPropsInterface as PropsInterface } from "../../interfaces";
 
@@ -17,6 +14,8 @@ const formDataInitialState: FormData = {
 
 const Account: React.FC<PropsInterface> = ({ token, user, callback: [callback, setCallback] }) => {
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(false);
 
   useEffect(() => {
     setFormData({
@@ -27,6 +26,28 @@ const Account: React.FC<PropsInterface> = ({ token, user, callback: [callback, s
     });
   }, [user]);
 
+  useEffect(() => {
+    if (formData.email === user.email || !formData.email) return;
+
+    const checkEmailValidity = async () => {
+      const { default: Helpers } = await import("../../utils/helpers");
+      setIsEmailValid(Helpers.checkEmailValidity(formData.email));
+    }
+
+    checkEmailValidity();
+  }, [formData.email]);
+
+  useEffect(() => {
+    if (formData.phoneNumber === user.phoneNumber || !formData.phoneNumber) return;
+
+    const checkPhoneNumberValidity = async () => {
+      const { default: Helpers } = await import("../../utils/helpers");
+      setIsPhoneNumberValid(Helpers.checkPhoneNumberValidity(formData.phoneNumber));
+    }
+
+    checkPhoneNumberValidity();
+  }, [formData.phoneNumber]);
+
   const handleProfileFormValidity = () => {
     if (!formData.firstName || !formData.lastName) return true;
     if (formData.firstName === user.firstName && formData.lastName === user.lastName) return true;
@@ -36,8 +57,7 @@ const Account: React.FC<PropsInterface> = ({ token, user, callback: [callback, s
   const handleContactFormValidity = () => {
     if (!formData.email || !formData.phoneNumber) return true;
     if (formData.email === user.email && formData.phoneNumber === user.phoneNumber) return true;
-    if (!Helpers.checkEmailValidity(formData.email)) return true;
-    if (!Helpers.checkPhoneNumberValidity(formData.phoneNumber)) return true;
+    if (!isEmailValid || !isPhoneNumberValid) return true;
     return false;
   }
 
@@ -45,6 +65,7 @@ const Account: React.FC<PropsInterface> = ({ token, user, callback: [callback, s
     event.preventDefault();
 
     try {
+      const { default: UserService } = await import("../../services/user-service");
       const { data } = await UserService.updateUser(token, user._id, formData);
       setCallback(!callback);
       alert(data.message);
@@ -57,6 +78,7 @@ const Account: React.FC<PropsInterface> = ({ token, user, callback: [callback, s
     event.preventDefault();
 
     try {
+      const { default: UserService } = await import("../../services/user-service");
       const { data } = await UserService.updateUser(token, user._id, formData);
       setCallback(!callback);
       alert(data.message);
@@ -73,14 +95,36 @@ const Account: React.FC<PropsInterface> = ({ token, user, callback: [callback, s
 
         <form onSubmit={handleProfileFormSubmit}>
           <div className={styles.field}>
-            <input type="text" id="firstName" name="firstName" autoComplete="given-name" placeholder=" "
-              value={formData.firstName} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              autoComplete="given-name"
+              placeholder=" "
+              value={formData.firstName}
+              onChange={async event => {
+                const { name, value } = event.target;
+                const { default: Handlers } = await import("../../utils/handlers");
+                Handlers.handleFormDataChange(name, value, setFormData);
+              }}
+            />
             <label htmlFor="firstName">First name</label>
           </div>
 
           <div className={styles.field}>
-            <input type="text" id="lastName" name="lastName" autoComplete="family-name" placeholder=" "
-              value={formData.lastName} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              autoComplete="family-name"
+              placeholder=" "
+              value={formData.lastName}
+              onChange={async event => {
+                const { name, value } = event.target;
+                const { default: Handlers } = await import("../../utils/handlers");
+                Handlers.handleFormDataChange(name, value, setFormData);
+              }}
+            />
             <label htmlFor="lastName">Last name</label>
           </div>
 
@@ -94,21 +138,39 @@ const Account: React.FC<PropsInterface> = ({ token, user, callback: [callback, s
 
         <form onSubmit={handleContactFormSubmit}>
           <div className={styles.field}>
-            <input type="email" id="email" name="email" autoComplete="email" placeholder=" "
-              value={formData.email} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              autoComplete="email"
+              placeholder=" "
+              value={formData.email}
+              onChange={async event => {
+                const { name, value } = event.target;
+                const { default: Handlers } = await import("../../utils/handlers");
+                Handlers.handleFormDataChange(name, value, setFormData);
+              }}
+            />
             <label htmlFor="email">Email</label>
-
-            <div className={`${styles.validity}
-              ${formData.email !== user.email && formData.email ? (Helpers.checkEmailValidity(formData.email) ? styles.true : styles.false) : ""}`} />
+            <div className={`${styles.validity} ${formData.email !== user.email && formData.email ? (isEmailValid ? styles.true : styles.false) : ""}`} />
           </div>
 
           <div className={styles.field}>
-            <input type="text" id="phoneNumber" name="phoneNumber" autoComplete="tel-national" placeholder=" "
-              value={formData.phoneNumber} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+            <input
+              type="text"
+              id="phoneNumber"
+              name="phoneNumber"
+              autoComplete="tel-national"
+              placeholder=" "
+              value={formData.phoneNumber}
+              onChange={async event => {
+                const { name, value } = event.target;
+                const { default: Handlers } = await import("../../utils/handlers");
+                Handlers.handleFormDataChange(name, value, setFormData);
+              }}
+            />
             <label htmlFor="phoneNumber">Phone number</label>
-
-            <div className={`${styles.validity}
-              ${formData.phoneNumber !== user.phoneNumber && formData.phoneNumber ? (Helpers.checkPhoneNumberValidity(formData.phoneNumber) ? styles.true : styles.false) : ""}`} />
+            <div className={`${styles.validity} ${formData.phoneNumber !== user.phoneNumber && formData.phoneNumber ? (isPhoneNumberValid ? styles.true : styles.false) : ""}`} />
           </div>
 
           <button type="submit" disabled={handleContactFormValidity()}>Update</button>

@@ -12,7 +12,7 @@ const Authorization = async (req: NextApiRequest, adminRequired: boolean) => {
     throw new Error("Unauthorized!");
   });
 
-  const user = await UsersModel.findById(decoded.sub);
+  const user = await UsersModel.findById(decoded.sub).select("firstName lastName email phoneNumber avatar").select("-password").lean();
   if (!user) throw new Error("User not found!");
 
   if (adminRequired) {

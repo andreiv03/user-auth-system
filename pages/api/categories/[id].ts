@@ -10,26 +10,26 @@ const updateCategory = async (req: NextApiRequest, res: NextApiResponse) => {
     await Authorization(req, true);
     const { name, parent } = req.body;
 
-    const category = await Categories.findById(req.query.id);
+    const category = await Categories.findById(req.query.id).select("name").lean();
     if (!category) return res.status(400).json({ message: "Category not found!" });
 
-    const duplicate = await Categories.findOne({ name });
-    if (duplicate && parent === category.parent) return res.status(400).json({ message: "This category already exists!" });
+    const duplicate = await Categories.exists({ name: name.toLowerCase() });
+    if (duplicate) return res.status(400).json({ message: "This category already exists!" });
 
     await Categories.findByIdAndUpdate(req.query.id, {
-      name,
+      name: name.toLowerCase(),
       parent
     });
     
     await Categories.updateMany({ parent: category.name }, {
       $set: {
-        parent: name
+        parent: name.toLowerCase()
       }
     });
 
     await Products.updateMany({ category: category.name }, {
       $set: {
-        category: name
+        category: name.toLowerCase()
       }
     });
 
@@ -43,10 +43,10 @@ const deleteCategory = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await Authorization(req, true);
 
-    const category = await Categories.findById(req.query.id);
+    const category = await Categories.findById(req.query.id).select("name").lean();
     if (!category) return res.status(400).json({ message: "Category not found!" });
 
-    const product = await Products.findOne({ category: category.name });
+    const product = await Products.exists({ category: category.name });
     if (product) return res.status(400).json({ message: "The category must not contain any products at the time of deletion!" });
 
     await Categories.findByIdAndDelete(req.query.id);
@@ -57,7 +57,7 @@ const deleteCategory = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDatabase();
 
   switch (req.method) {
@@ -66,3 +66,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     default: return res.status(404).json({ message: "API route not found!" });
   }
 }
+
+export default handler;

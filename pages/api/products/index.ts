@@ -6,7 +6,7 @@ import connectDatabase from "../../../utils/database";
 
 const getProducts = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const products = await Products.find().select("sku name description price category image");
+    const products = await Products.find().select("sku name description price category image").lean();
     if (!products) return res.status(400).json({ message: "No products were found!" });
 
     return res.status(200).json(products);
@@ -20,11 +20,11 @@ const createProduct = async (req: NextApiRequest, res: NextApiResponse) => {
     await Authorization(req, true);
     const { sku, name, description, price, category, image } = req.body;
 
-    const product = await Products.findOne({ sku });
+    const product = await Products.exists({ sku: sku.toLowerCase() });
     if (product) return res.status(400).json({ message: "The SKU must be unique!" });
 
     await Products.create({
-      sku,
+      sku: sku.toLowerCase(),
       name,
       description,
       price,
@@ -38,7 +38,7 @@ const createProduct = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDatabase();
   
   switch (req.method) {
@@ -47,3 +47,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     default: return res.status(404).json({ message: "API route not found!" });
   }
 }
+
+export default handler;

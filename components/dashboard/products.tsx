@@ -66,19 +66,19 @@ const Products: React.FC<PropsInterface> = ({ token, categories }) => {
 
           <div className={styles.field}>
             <input type="text" id="sku" name="sku" placeholder=" "
-              value={formData.sku} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+              value={formData.sku} onChange={event => Handlers.handleFormDataChange(event.target.name, event.target.value, setFormData)} />
             <label htmlFor="sku">SKU (stock keeping unit)</label>
           </div>
 
           <div className={styles.field}>
             <input type="text" id="name" name="name" placeholder=" "
-              value={formData.name} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+              value={formData.name} onChange={event => Handlers.handleFormDataChange(event.target.name, event.target.value, setFormData)} />
             <label htmlFor="name">Name</label>
           </div>
 
           <div className={`${styles.field} ${styles.textarea}`}>
             <textarea id="description" name="description" placeholder=" "
-              value={formData.description} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+              value={formData.description} onChange={event => Handlers.handleFormDataChange(event.target.name, event.target.value, setFormData)} />
             <label htmlFor="description">Description</label>
           </div>
           
@@ -86,7 +86,7 @@ const Products: React.FC<PropsInterface> = ({ token, categories }) => {
 
           <div className={styles.field}>
             <input type="number" id="price" name="price" placeholder=" "
-              value={formData.price} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+              value={formData.price} onChange={event => Handlers.handleFormDataChange(event.target.name, event.target.value, setFormData)} />
             <label htmlFor="price">Price</label>
           </div>
 

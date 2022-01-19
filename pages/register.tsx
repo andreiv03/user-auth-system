@@ -1,17 +1,15 @@
 import type { NextPage } from "next";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useState, useContext, useEffect } from "react";
 import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
 
-import AuthService from "../services/auth-service";
-import Handlers from "../utils/handlers";
-import Helpers from "../utils/helpers";
 import { UserContext } from "../contexts/user-context";
 import type { RegisterFormDataInterface as FormData } from "../interfaces/auth-interfaces";
 
 import styles from "../styles/pages/auth.module.scss";
-import NotFound from "../components/not-found";
+const NotFound = dynamic(() => import("../components/not-found"));
 
 const formDataInitialState: FormData = {
   firstName: "",
@@ -25,15 +23,39 @@ const Register: NextPage = () => {
   const { token: [, setToken], user: [user] } = useContext(UserContext);
 
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
+  const [isEmailValid, setIsEmailValid] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState("");
 
-  useEffect(() => setPasswordStrength(Helpers.checkPasswordStrength(formData.password)), [formData.password]);
+  useEffect(() => {
+    if (!formData.email) return;
+
+    const checkEmailValidity = async () => {
+      const { default: Helpers } = await import("../utils/helpers");
+      setIsEmailValid(Helpers.checkEmailValidity(formData.email));
+    }
+
+    checkEmailValidity();
+  }, [formData.email]);
+
+  useEffect(() => {
+    if (!formData.password) return;
+
+    const checkPasswordStrength = async () => {
+      const { default: Helpers } = await import("../utils/helpers");
+      setPasswordStrength(Helpers.checkPasswordStrength(formData.password));
+    }
+
+    checkPasswordStrength();
+  }, [formData.password]);
+
+  const handlePasswordStrengthClassNames = () =>
+    formData.password ? passwordStrength === "Weak" ? styles.weak : passwordStrength === "Medium" ? styles.medium : styles.strong : "";
 
   const handleFormValidity = () => {
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) return true;
-    else if (!Helpers.checkEmailValidity(formData.email)) return true;
-    else if (passwordStrength === "Weak") return true;
+    if (!isEmailValid) return true;
+    if (passwordStrength === "Weak") return true;
     return false;
   }
 
@@ -41,6 +63,7 @@ const Register: NextPage = () => {
     event.preventDefault();
 
     try {
+      const { default: AuthService } = await import("../services/auth-service");
       const { data } = await AuthService.register(formData);
       setToken(data.accessToken);
       localStorage.setItem("authenticated", "true");
@@ -50,7 +73,7 @@ const Register: NextPage = () => {
     }
   }
 
-  if (user._id) return <NotFound condition={!user._id} />
+  if (user._id) return <NotFound />
 
   return (
     <div className={styles.page}>
@@ -61,34 +84,79 @@ const Register: NextPage = () => {
         
           <form className={styles.form} onSubmit={handleFormSubmit} noValidate>
             <div className={styles.field}>
-              <input type="text" id="firstName" name="firstName" autoComplete="off" placeholder=" "
-                value={formData.firstName} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                autoComplete="off"
+                placeholder=" "
+                value={formData.firstName}
+                onChange={async event => {
+                  const { name, value } = event.target;
+                  const { default: Handlers } = await import("../utils/handlers");
+                  Handlers.handleFormDataChange(name, value, setFormData);
+                }}
+              />
               <label htmlFor="firstName">First name</label>
             </div>
 
             <div className={styles.field}>
-              <input type="text" id="lastName" name="lastName" autoComplete="off" placeholder=" "
-                value={formData.lastName} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                autoComplete="off"
+                placeholder=" "
+                value={formData.lastName}
+                onChange={async event => {
+                  const { name, value } = event.target;
+                  const { default: Handlers } = await import("../utils/handlers");
+                  Handlers.handleFormDataChange(name, value, setFormData);
+                }}
+              />
               <label htmlFor="lastName">Last name</label>
             </div>
 
             <div className={styles.field}>
-              <input type="email" id="email" name="email" autoComplete="email" placeholder=" "
-                value={formData.email} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
+              <input
+                type="email"
+                id="email"
+                name="email"
+                autoComplete="email"
+                placeholder=" "
+                value={formData.email}
+                onChange={async event => {
+                  const { name, value } = event.target;
+                  const { default: Handlers } = await import("../utils/handlers");
+                  Handlers.handleFormDataChange(name, value, setFormData);
+                }}
+              />
               <label htmlFor="email">Email</label>
-
-              <div className={`${styles.validity}
-                ${formData.email ? (Helpers.checkEmailValidity(formData.email) ? styles.true : styles.false) : ""}`} />
+              <div className={`${styles.validity} ${formData.email ? (isEmailValid ? styles.true : styles.false) : ""}`} />
             </div>
 
             <div className={styles.field}>
-              <input type={isPasswordVisible ? "text" : "password"} id="password" name="password" autoComplete="new-password" placeholder=" "
-                value={formData.password} onChange={event => Handlers.handleFormDataChange(event, setFormData)} />
-              <label htmlFor="password">Password {formData.password && <span className={`${formData.password ? passwordStrength === "Weak" ? styles.weak : passwordStrength === "Medium" ? styles.medium : styles.strong : ""}`}>({passwordStrength})</span>}</label>
+              <input
+                type={isPasswordVisible ? "text" : "password"}
+                id="password"
+                name="password"
+                autoComplete="new-password"
+                placeholder=" "
+                value={formData.password}
+                onChange={async event => {
+                  const { name, value } = event.target;
+                  const { default: Handlers } = await import("../utils/handlers");
+                  Handlers.handleFormDataChange(name, value, setFormData);
+                }}
+              />
+              <label htmlFor="password">
+                Password {formData.password && <span className={handlePasswordStrengthClassNames()}>({passwordStrength})</span>}
+              </label>
 
-              <div className={`${styles.validity}
-                ${formData.password ? passwordStrength === "Weak" ? styles.weak : passwordStrength === "Medium" ? styles.medium : styles.strong : ""}`} />
-              <div className={styles.show_button} onClick={() => setIsPasswordVisible(!isPasswordVisible)}>{isPasswordVisible ? <RiEyeOffFill /> : <RiEyeFill />}</div>
+              <div className={`${styles.validity} ${handlePasswordStrengthClassNames()}`} />
+              <div className={styles.show_button} onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
+                {isPasswordVisible ? <RiEyeOffFill /> : <RiEyeFill />}
+              </div>
             </div>
 
             <button type="submit" disabled={handleFormValidity()}>Sign up</button>

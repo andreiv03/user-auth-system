@@ -1,24 +1,24 @@
 import type { NextPage } from "next";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useState, useEffect, useRef, useContext } from "react";
 
-import AuthService from "../services/auth-service";
 import { UserContext, userInitialState } from "../contexts/user-context";
 
 import styles from "../styles/pages/settings.module.scss";
-import NotFound from "../components/not-found";
-import LoadingSpinner from "../components/loading-spinner";
-import Account from "../components/settings/account";
-import Avatar from "../components/settings/avatar";
-import Security from "../components/settings/security";
+const NotFound = dynamic(() => import("../components/not-found"));
+const LoadingSpinner = dynamic(() => import("../components/loading-spinner"));
+const Account = dynamic(() => import("../components/settings/account"));
+const Avatar = dynamic(() => import("../components/settings/avatar"));
+const Security = dynamic(() => import("../components/settings/security"));
 
 const Settings: NextPage = () => {
   const router = useRouter();
   const { token: [token, setToken], user: [user, setUser], callback } = useContext(UserContext);
-  const wrapperRef = useRef({} as HTMLDivElement);
 
   const [isLoading, setIsLoading] = useState(true);
   const [activeItem, setActiveItem] = useState(1);
+  const wrapperRef = useRef({} as HTMLDivElement);
 
   useEffect(() => {
     const loadingTimeout = setTimeout(() => setIsLoading(false), 500);
@@ -35,6 +35,7 @@ const Settings: NextPage = () => {
 
   const handleLogout = async () => {
     try {
+      const { default: AuthService } = await import("../services/auth-service");
       await AuthService.logout();
       setToken("");
       setUser(userInitialState);
@@ -45,7 +46,7 @@ const Settings: NextPage = () => {
     }
   }
 
-  if (!user._id) return <NotFound condition={user._id !== ""} />
+  if (!user._id) return <NotFound />
 
   return (
     <div className={styles.page}>

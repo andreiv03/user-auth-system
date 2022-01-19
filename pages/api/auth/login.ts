@@ -10,7 +10,7 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { email, password } = req.body;
 
-    const user = await UsersModel.findOne({ email });
+    const user = await UsersModel.findOne({ email }).select("password").lean();
     if (!user) return res.status(400).json({ message: "User not found!" });
 
     const match = await bcrypt.compare(password, user.password);

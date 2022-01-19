@@ -1,6 +1,6 @@
 import axios from "./axios";
 import type { UserInterface, AccountFormDataInterface, PasswordFormDataInterface } from "../interfaces/user-interfaces";
-import type { FileUploadInterface, MessageResponseInterface } from "../interfaces";
+import type { MessageResponseInterface, FileUploadInterface } from "../interfaces";
 
 class UserServiceClass {
   getUser(token: string) {

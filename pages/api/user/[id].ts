@@ -8,16 +8,15 @@ const updateUser = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await Authorization(req, false);
     const { firstName, lastName, email, phoneNumber, avatar } = req.body;
-      
-    const user = await UsersModel.findById(req.query.id);
-    if (!user) return res.status(400).json({ message: "User not found!" });
 
-    await UsersModel.findByIdAndUpdate(req.query.id, {
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      avatar
+    await UsersModel.updateOne({ _id: req.query.id }, {
+      $set: {
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        avatar
+      }
     });
 
     return res.status(200).json({ message: "Account updated!" });

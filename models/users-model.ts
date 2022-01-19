@@ -33,7 +33,10 @@ const usersSchema = new mongoose.Schema({
   },
   avatar: {
     type: Object,
-    required: true
+    default: {
+      fileId: "",
+      url: ""
+    }
   },
   cart: {
     type: Array,
