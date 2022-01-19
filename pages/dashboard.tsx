@@ -54,7 +54,7 @@ const Dashboard: NextPage = () => {
     }
   }
 
-  if (!user._id || !user.isAdmin) return <NotFound condition={user.isAdmin} />
+  if (!user._id || !user.isAdmin) return <NotFound />
 
   return (
     <div className={styles.page}>
