@@ -24,7 +24,7 @@ class TokenClass {
   
       jwt.verify(token, JWT_SECRET, (error, payload) => {
         if (error) reject(error);
-        resolve(payload!);
+        resolve(payload as JwtPayload);
       });
     });
   }
