@@ -6,28 +6,28 @@ export interface MessageResponseInterface {
 };
 
 export interface FileUploadInterface {
-  fileId: string;
+  publicId: string;
   url: string;
 };
 
 // Components
-export interface AccountPropsInterface {
+export interface AccountComponentPropsInterface {
   token: string;
   user: UserInterface;
   callback: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 };
 
-export interface SecurityPropsInterface {
+export interface SecurityComponentPropsInterface {
   token: string;
   user: UserInterface;
 };
 
-export interface ProductsPropsInterface {
+export interface ProductsComponentPropsInterface {
   token: string;
   categories: CategoriesInterface[];
 };
 
-export interface CategoriesPropsInterface {
+export interface CategoriesComponentPropsInterface {
   token: string;
   categories: CategoriesInterface[];
   callback: [boolean, React.Dispatch<React.SetStateAction<boolean>>];

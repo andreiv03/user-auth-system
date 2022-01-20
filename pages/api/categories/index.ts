@@ -1,12 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-
 import Authorization from "../../../middleware/authorization";
-import Categories from "../../../models/categories-model";
-import connectDatabase from "../../../utils/database";
 
 const getCategories = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const categories = await Categories.find().select("name parent").lean();
+    const { default: CategoriesModel } = await import("../../../models/categories-model");
+    const categories = await CategoriesModel.find().select("name parent").lean();
     if (!categories) return res.status(400).json({ message: "No categories were found!" });
 
     return res.status(200).json(categories);
@@ -20,10 +18,11 @@ const createCategory = async (req: NextApiRequest, res: NextApiResponse) => {
     await Authorization(req, true);
     const { name, parent } = req.body;
 
-    const category = await Categories.exists({ name: name.toLowerCase() });
+    const { default: CategoriesModel } = await import("../../../models/categories-model");
+    const category = await CategoriesModel.exists({ name: name.toLowerCase() });
     if (category) return res.status(400).json({ message: "This category already exists!" });
   
-    await Categories.create({
+    await CategoriesModel.create({
       name: name.toLowerCase(),
       parent
     });
@@ -34,9 +33,7 @@ const createCategory = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDatabase();
-
+const handler = (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET": return getCategories(req, res);
     case "POST": return createCategory(req, res);

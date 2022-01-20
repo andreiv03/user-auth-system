@@ -1,33 +1,31 @@
 import { NextApiRequest, NextApiResponse } from "next";
-
 import Authorization from "../../../middleware/authorization";
-import Products from "../../../models/products-model";
-import Categories from "../../../models/categories-model";
-import connectDatabase from "../../../utils/database";
 
 const updateCategory = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await Authorization(req, true);
     const { name, parent } = req.body;
 
-    const category = await Categories.findById(req.query.id).select("name").lean();
+    const { default: CategoriesModel } = await import("../../../models/categories-model");
+    const category = await CategoriesModel.findById(req.query.id).select("name").lean();
     if (!category) return res.status(400).json({ message: "Category not found!" });
 
-    const duplicate = await Categories.exists({ name: name.toLowerCase() });
+    const duplicate = await CategoriesModel.exists({ name: name.toLowerCase() });
     if (duplicate) return res.status(400).json({ message: "This category already exists!" });
 
-    await Categories.findByIdAndUpdate(req.query.id, {
+    await CategoriesModel.findByIdAndUpdate(req.query.id, {
       name: name.toLowerCase(),
       parent
     });
     
-    await Categories.updateMany({ parent: category.name }, {
+    await CategoriesModel.updateMany({ parent: category.name }, {
       $set: {
         parent: name.toLowerCase()
       }
     });
 
-    await Products.updateMany({ category: category.name }, {
+    const { default: ProductsModel } = await import("../../../models/products-model");
+    await ProductsModel.updateMany({ category: category.name }, {
       $set: {
         category: name.toLowerCase()
       }
@@ -43,13 +41,15 @@ const deleteCategory = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await Authorization(req, true);
 
-    const category = await Categories.findById(req.query.id).select("name").lean();
+    const { default: CategoriesModel } = await import("../../../models/categories-model");
+    const category = await CategoriesModel.findById(req.query.id).select("name").lean();
     if (!category) return res.status(400).json({ message: "Category not found!" });
 
-    const product = await Products.exists({ category: category.name });
+    const { default: ProductsModel } = await import("../../../models/products-model");
+    const product = await ProductsModel.exists({ category: category.name });
     if (product) return res.status(400).json({ message: "The category must not contain any products at the time of deletion!" });
 
-    await Categories.findByIdAndDelete(req.query.id);
+    await CategoriesModel.findByIdAndDelete(req.query.id);
 
     return res.status(200).json({ message: "Category deleted!" });
   } catch (error: any) {
@@ -57,9 +57,7 @@ const deleteCategory = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDatabase();
-
+const handler = (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "PATCH": return updateCategory(req, res);
     case "DELETE": return deleteCategory(req, res);

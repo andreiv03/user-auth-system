@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { RiEyeOffFill, RiEyeFill } from "react-icons/ri";
 
 import type { PasswordFormDataInterface as FormData } from "../../interfaces/user-interfaces";
-import type { SecurityPropsInterface as PropsInterface } from "../../interfaces";
+import type { SecurityComponentPropsInterface as PropsInterface } from "../../interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
 

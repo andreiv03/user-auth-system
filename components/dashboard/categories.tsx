@@ -1,13 +1,12 @@
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { RiEdit2Fill, RiDeleteBinFill } from "react-icons/ri";
 
-import CategoriesService from "../../services/categories-service";
-import Handlers from "../../utils/handlers";
 import type { CategoriesInterface, CategoryFormDataInterface as FormData } from "../../interfaces/categories-interfaces";
-import type { CategoriesPropsInterface as PropsInterface } from "../../interfaces";
+import type { CategoriesComponentPropsInterface as PropsInterface } from "../../interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
-import SelectInput from "../select-input";
+const SelectInput = dynamic(() => import("../select-input"));
 
 const formDataInitialState: FormData = {
   name: "",
@@ -18,32 +17,9 @@ const Categories: React.FC<PropsInterface> = ({ token, categories, callback: [ca
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
   const [categoryUpdate, setCategoryUpdate] = useState<CategoriesInterface>({} as CategoriesInterface);
 
-  const handleFormValidity = () => {
-    if (!formData.name) return true;
-    if (categoryUpdate._id && formData.name === categoryUpdate.name && formData.parent === categoryUpdate.parent) return true;
-    return false;
-  }
-
   const handleUpdateFormCancel = () => {
     setFormData(formDataInitialState);
     setCategoryUpdate({} as CategoriesInterface);
-  }
-
-  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    try {
-      let data;
-      if (!categoryUpdate._id) ({ data } = await CategoriesService.createCategory(token, formData));
-      else ({ data } = await CategoriesService.updateCategory(token, categoryUpdate._id, formData));
-
-      setFormData(formDataInitialState);
-      setCategoryUpdate({} as CategoriesInterface);
-      setCallback(!callback);
-      alert(data.message);
-    } catch (error: any) {
-      return alert(error.response.data.message);
-    }
   }
 
   const handleCategoryUpdate = async (category: CategoriesInterface) => {
@@ -53,7 +29,33 @@ const Categories: React.FC<PropsInterface> = ({ token, categories, callback: [ca
 
   const handleCategoryDelete = async (id: string) => {
     try {
+      const { default: CategoriesService } = await import("../../services/categories-service");
       const { data } = await CategoriesService.deleteCategory(token, id);
+      setFormData(formDataInitialState);
+      setCategoryUpdate({} as CategoriesInterface);
+      setCallback(!callback);
+      alert(data.message);
+    } catch (error: any) {
+      return alert(error.response.data.message);
+    }
+  }
+
+  const handleFormValidity = () => {
+    if (!formData.name) return true;
+    if (categoryUpdate._id && formData.name === categoryUpdate.name && formData.parent === categoryUpdate.parent) return true;
+    return false;
+  }
+
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      let data;
+
+      const { default: CategoriesService } = await import("../../services/categories-service");
+      if (!categoryUpdate._id) ({ data } = await CategoriesService.createCategory(token, formData));
+      else ({ data } = await CategoriesService.updateCategory(token, categoryUpdate._id, formData));
+
       setFormData(formDataInitialState);
       setCategoryUpdate({} as CategoriesInterface);
       setCallback(!callback);
@@ -71,13 +73,25 @@ const Categories: React.FC<PropsInterface> = ({ token, categories, callback: [ca
 
         <form onSubmit={handleFormSubmit} autoComplete="off">
           <div className={styles.field}>
-            <input type="text" id="name" name="name" placeholder=" "
-              value={formData.name} onChange={event => Handlers.handleFormDataChange(event.target.name, event.target.value, setFormData)} />
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder=" "
+              value={formData.name}
+              onChange={async event => {
+                const { name, value } = event.target;
+                const { default: Handlers } = await import("../../utils/handlers");
+                Handlers.handleFormDataChange(name, value, setFormData);
+              }}
+            />
             <label htmlFor="name">Name</label>
           </div>
 
           <SelectInput styles={styles} options={categories} name="parent" value={formData.parent} disabled={formData.name} setState={setFormData} />
-          <button type="submit" disabled={handleFormValidity()}>{!categoryUpdate._id ? "Create" : "Update"}</button>
+          <button type="submit" disabled={handleFormValidity()}>
+            {!categoryUpdate._id ? "Create" : "Update"}
+          </button>
           {categoryUpdate._id && <button type="button" onClick={handleUpdateFormCancel}>Cancel</button>}
         </form>
       </div>

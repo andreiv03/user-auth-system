@@ -1,14 +1,14 @@
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import { useContext, useEffect, useState } from "react";
 import { IoLogoJavascript } from "react-icons/io";
 import { RiHomeSmile2Fill, RiSettings3Fill } from "react-icons/ri";
 import { motion, AnimatePresence } from "framer-motion";
 
-import AuthService from "../services/auth-service";
 import { UserContext, userInitialState } from "../contexts/user-context";
 
 import styles from "../styles/components/header.module.scss";
-import Link from "./link";
+const Link = dynamic(() => import("./link"));
 
 const profileVariants = {
   initial: {
@@ -42,11 +42,13 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     try {
+      const { default: AuthService } = await import("../services/auth-service");
       await AuthService.logout();
       setIsActive(false);
       setToken("");
       setUser(userInitialState);
       localStorage.removeItem("authenticated");
+      router.push("/");
     } catch (error: any) {
       return alert(error.response.data.message);
     }

@@ -13,10 +13,9 @@
   "dependencies": {
     "axios": "^0.24.0",
     "bcrypt": "^5.0.1",
+    "cloudinary": "^1.28.1",
     "cookie": "^0.4.1",
-    "formidable": "^2.0.1",
     "framer-motion": "^5.5.5",
-    "googleapis": "^92.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.7",
     "next": "^12.0.7",
@@ -28,7 +27,6 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/cookie": "^0.4.1",
-    "@types/formidable": "^2.0.2",
     "@types/jsonwebtoken": "^8.5.6",
     "@types/react": "^17.0.37",
     "eslint": "^8.5.0",

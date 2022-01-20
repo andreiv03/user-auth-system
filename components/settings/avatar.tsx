@@ -1,36 +1,31 @@
-import React, { useRef, useState } from "react";
-
-import UserService from "../../services/user-service";
-import APIs from "../../services/apis";
-import Handlers from "../../utils/handlers";
-import type { AccountPropsInterface as PropsInterface } from "../../interfaces";
+import { useRef, useState } from "react";
+import type { AccountComponentPropsInterface as PropsInterface } from "../../interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
 
 const Avatar: React.FC<PropsInterface> = ({ token, user, callback: [callback, setCallback] }) => {
-  const [file, setFile] = useState<File>({} as File);
-  const [url, setUrl] = useState<string>("");
+  const [previewSource, setPreviewSource] = useState("");
   const formRef = useRef({} as HTMLFormElement);
 
-  const handleUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files || !event.target.files[0]) return;
     if (event.target.files[0].type !== "image/jpeg" && event.target.files[0].type !== "image/png") return;
 
     const reader = new FileReader();
-    reader.onload = () => reader.readyState === 2 && setUrl(reader.result as string);
     reader.readAsDataURL(event.target.files[0]);
-
-    Handlers.handleFileUpload(event, setFile);
+    reader.onloadend = () => reader.readyState === 2 && setPreviewSource(reader.result as string);
   }
 
   const handleRemove = async () => {
     try {
-      const { data } = await APIs.googleDriveDelete(token, user.avatar.fileId);
-      await UserService.updateAvatar(token, user._id, { fileId: "", url: "" });
+      const { default: CloudinaryService } = await import("../../services/cloudinary-service");
+      await CloudinaryService.delete(token, user.avatar.publicId);
+
+      const { default: UserService } = await import("../../services/user-service");
+      const { data } = await UserService.updateAvatar(token, user._id, { publicId: "", url: "" });
 
       setCallback(!callback);
-      setFile({} as File);
-      setUrl("");
+      setPreviewSource("");
       alert(data.message);
     } catch (error: any) {
       return alert(error.response.data.message);
@@ -43,12 +38,15 @@ const Avatar: React.FC<PropsInterface> = ({ token, user, callback: [callback, se
     
     try {
       let data;
-      ({ data } = await APIs.googleDriveUpload(token, file));
+
+      const { default: CloudinaryService } = await import("../../services/cloudinary-service");
+      ({ data } = await CloudinaryService.upload(token, previewSource));
+
+      const { default: UserService } = await import("../../services/user-service");
       ({ data } = await UserService.updateAvatar(token, user._id, data));
 
       setCallback(!callback);
-      setFile({} as File);
-      setUrl("");
+      setPreviewSource("");
       alert(data.message);
     } catch (error: any) {
       return alert(error.response.data.message);
@@ -59,11 +57,7 @@ const Avatar: React.FC<PropsInterface> = ({ token, user, callback: [callback, se
     <div className={styles.content}>
       <div className={styles.section}>
         <div className={styles.avatar}>
-          {user._id ? (
-            <img src={url && typeof url === "string" ? url : user.avatar.url ? user.avatar.url : "/avatar.jpg"} alt="Avatar" />
-          ) : (
-            <img src="/avatar.jpg" alt="Unknown avatar" />
-          )}
+          <img src={previewSource ? previewSource : user.avatar.url ? user.avatar.url : "/avatar.jpg"} alt="Avatar" />
         </div>
 
         <form ref={formRef} onSubmit={handleFormSubmit}>
@@ -71,10 +65,10 @@ const Avatar: React.FC<PropsInterface> = ({ token, user, callback: [callback, se
             <input type="file" id="file" onChange={handleUpload} />
           </div>
 
-          {url ? (
+          {previewSource ? (
             <>
               <button type="submit">Save</button>
-              <button type="reset" onClick={() => { setFile({} as File), setUrl("") }}>Cancel</button>
+              <button type="reset" onClick={() => { formRef.current.reset(), setPreviewSource("") }}>Cancel</button>
             </>
           ) : (
             <>

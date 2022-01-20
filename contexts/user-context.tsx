@@ -1,7 +1,4 @@
 import { createContext, useState, useEffect } from "react";
-
-import AuthService from "../services/auth-service";
-import UserService from "../services/user-service";
 import type { UserInterface } from "../interfaces/user-interfaces";
 
 interface ProviderStateInterface {
@@ -18,7 +15,7 @@ export const userInitialState: UserInterface = {
   phoneNumber: "",
   isAdmin: false,
   avatar: {
-    fileId: "",
+    publicId: "",
     url: ""
   }
 };
@@ -36,6 +33,7 @@ export const UserProvider: React.FC = ({ children }) => {
 
     const getAccesToken = async () => {
       try {
+        const { default: AuthService } = await import("../services/auth-service");
         const { data } = await AuthService.refreshToken();
         setToken(data.accessToken);
         setTimeout(() => getAccesToken, 60 * 10); // 10 minutes
@@ -52,6 +50,7 @@ export const UserProvider: React.FC = ({ children }) => {
 
     const getUser = async () => {
       try {
+        const { default: UserService } = await import("../services/user-service");
         const { data } = await UserService.getUser(token);
         setUser(data);
       } catch (error: any) {

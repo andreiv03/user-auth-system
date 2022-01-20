@@ -34,7 +34,7 @@ const usersSchema = new mongoose.Schema({
   avatar: {
     type: Object,
     default: {
-      fileId: "",
+      publicId: "",
       url: ""
     }
   },

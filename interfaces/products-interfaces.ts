@@ -6,7 +6,7 @@ export interface ProductsInterface {
   price: string;
   category: string;
   image: {
-    fileId: string;
+    publicId: string;
     url: string;
   };
 };

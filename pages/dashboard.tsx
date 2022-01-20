@@ -1,15 +1,15 @@
 import type { NextPage } from "next";
+import dynamic from "next/dynamic";
 import { useState, useEffect, useRef, useContext } from "react";
 
-import CategoriesService from "../services/categories-service";
 import { UserContext } from "../contexts/user-context";
+import type { CategoriesInterface } from "../interfaces/categories-interfaces";
 
 import styles from "../styles/pages/settings.module.scss";
-import NotFound from "../components/not-found";
-import LoadingSpinner from "../components/loading-spinner";
-import Products from "../components/dashboard/products";
-import Categories from "../components/dashboard/categories";
-import { CategoriesInterface } from "../interfaces/categories-interfaces";
+const NotFound = dynamic(() => import("../components/not-found"));
+const LoadingSpinner = dynamic(() => import("../components/loading-spinner"));
+const Products = dynamic(() => import("../components/dashboard/products"));
+const Categories = dynamic(() => import("../components/dashboard/categories"));
 
 const categoriesInitialState: CategoriesInterface[] = [{
   _id: "",
@@ -19,18 +19,19 @@ const categoriesInitialState: CategoriesInterface[] = [{
 
 const Dashboard: NextPage = () => {
   const { token: [token], user: [user] } = useContext(UserContext);
-  const wrapperRef = useRef({} as HTMLDivElement);
-
+  
   const [categories, setCategories] = useState<CategoriesInterface[]>(categoriesInitialState);
   const [callback, setCallback] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [activeItem, setActiveItem] = useState(1);
-
+  const wrapperRef = useRef({} as HTMLDivElement);
+  
   useEffect(() => {
     if (!user._id || !user.isAdmin) return;
 
     const getCategories = async () => {
       try {
+        const { default: CategoriesService } = await import("../services/categories-service");
         const { data } = await CategoriesService.getCategories();
         setCategories(data);
       } catch (error: any) {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import type { AccountFormDataInterface as FormData } from "../../interfaces/user-interfaces";
-import type { AccountPropsInterface as PropsInterface } from "../../interfaces";
+import type { AccountComponentPropsInterface as PropsInterface } from "../../interfaces";
 
 import styles from "../../styles/pages/settings.module.scss";
 

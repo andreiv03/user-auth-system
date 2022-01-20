@@ -6,7 +6,7 @@ export interface UserInterface {
   phoneNumber: string;
   isAdmin: boolean;
   avatar: {
-    fileId: string;
+    publicId: string;
     url: string;
   };
 };

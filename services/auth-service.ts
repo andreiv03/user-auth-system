@@ -11,7 +11,7 @@ class AuthServiceClass {
   }
 
   logout() {
-    return axios.get<void>("/auth/logout");
+    return axios.get<null>("/auth/logout");
   }
 
   refreshToken() {

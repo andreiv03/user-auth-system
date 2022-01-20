@@ -8,7 +8,7 @@ const logout = (req: NextApiRequest, res: NextApiResponse) => {
       maxAge: -1,
     }));
 
-    return res.status(200).json({});
+    return res.status(200).end();
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }

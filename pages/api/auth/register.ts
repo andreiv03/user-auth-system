@@ -2,14 +2,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import cookie from "cookie";
 import bcrypt from "bcrypt";
 
-import UsersModel from "../../../models/users-model";
-import connectDatabase from "../../../utils/database";
-import Token from "../../../utils/token";
-
 const register = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
+    const { default: UsersModel } = await import("../../../models/users-model");
     const user = await UsersModel.exists({ email });
     if (user) return res.status(400).json({ message: "Email address already registered!" });
 
@@ -21,6 +18,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
       password: hashedPassword
     });
 
+    const { default: Token } = await import("../../../utils/token");
     const accessToken = await Token.signToken(newUser._id, "10m");
     const refreshToken = await Token.signToken(newUser._id, "7d");
 
@@ -38,9 +36,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  await connectDatabase();
-  
+const handler = (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "POST": return register(req, res);
     default: return res.status(404).json({ message: "API route not found!" });
