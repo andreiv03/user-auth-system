@@ -17,9 +17,11 @@ const upload = async (req: NextApiRequest, res: NextApiResponse) => {
     const { base64EncodedImage } = req.body;
     if (!base64EncodedImage) return res.status(400).json({ message: "Image not found!" });
 
+    console.log(base64EncodedImage)
     const { public_id, secure_url } = await cloudinary.v2.uploader.upload(base64EncodedImage, {
       folder: "e-commerce-website"
     });
+    console.log(public_id, secure_url)
 
     return res.status(200).json({
       publicId: public_id,
