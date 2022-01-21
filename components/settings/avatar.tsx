@@ -41,7 +41,8 @@ const Avatar: React.FC<PropsInterface> = ({ token, user, callback: [callback, se
 
       const { default: CloudinaryService } = await import("../../services/cloudinary-service");
       ({ data } = await CloudinaryService.upload(token, previewSource));
-
+      if (user.avatar.publicId) await CloudinaryService.delete(token, user.avatar.publicId);
+      
       const { default: UserService } = await import("../../services/user-service");
       ({ data } = await UserService.updateAvatar(token, user._id, data));
 
