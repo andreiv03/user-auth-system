@@ -1,34 +1,27 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { JWT_SECRET } from "../constants";
+import constants from "../constants";
 
-class TokenClass {
-  signToken(subject: any, expiresIn: string): Promise<string>  {
-    return new Promise((resolve, reject) => {
-      if (!JWT_SECRET) throw new Error("Secret Token not found!");
-  
-      const data = {
-        sub: subject,
-        iat: Date.now()
-      };
-  
-      jwt.sign(data, JWT_SECRET, { expiresIn }, (error, token) => {
-        if (error) reject(error);
-        resolve(token!);
-      });
-    });
-  }
+const signToken = (subject: any, expiresIn: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const data = {
+      sub: subject,
+      iat: Date.now()
+    };
 
-  verifyToken(token: string): Promise<JwtPayload> {
-    return new Promise((resolve, reject) => {
-      if (!JWT_SECRET) throw new Error("Secret Token not found!");
-  
-      jwt.verify(token, JWT_SECRET, (error, payload) => {
-        if (error) reject(error);
-        resolve(payload as JwtPayload);
-      });
+    jwt.sign(data, constants.JWT_SECRET, { expiresIn }, (error, token) => {
+      if (error || !token) return reject(error || "Token not found!");
+      return resolve(token);
     });
-  }
+  });
 }
 
-const Token = new TokenClass();
-export default Token;
+const verifyToken = (token: string): Promise<string | JwtPayload> => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, constants.JWT_SECRET, (error, payload) => {
+      if (error || !payload) return reject(error || "Payload not found!");
+      return resolve(payload);
+    });
+  });
+}
+
+export { signToken, verifyToken };

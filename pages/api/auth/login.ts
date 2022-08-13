@@ -2,20 +2,29 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import cookie from "cookie";
 import bcrypt from "bcrypt";
 
-const login = async (req: NextApiRequest, res: NextApiResponse) => {
+interface ExtendedNextApiRequest extends NextApiRequest {
+  body: {
+    email: string;
+    password: string;
+  };
+};
+
+const login = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   try {
     const { email, password } = req.body;
+    
+    const { connectToDatabase } = await import("../../../utils/mongodb");
+    const { database } = await connectToDatabase();
 
-    const { default: UsersModel } = await import("../../../models/users-model");
-    const user = await UsersModel.findOne({ email }).select("password").lean();
+    const user = await database.collection("users").findOne({ email });
     if (!user) return res.status(400).json({ message: "User not found!" });
 
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ message: "Incorrect password!" });
 
-    const { default: Token } = await import("../../../utils/token");
-    const accessToken = await Token.signToken(user._id, "10m");
-    const refreshToken = await Token.signToken(user._id, "7d");
+    const { signToken } = await import("../../../utils/token");
+    const accessToken = await signToken(user._id, "10m");
+    const refreshToken = await signToken(user._id, "7d");
 
     res.setHeader("Set-Cookie", cookie.serialize("refreshToken", refreshToken, {
       path: "/",

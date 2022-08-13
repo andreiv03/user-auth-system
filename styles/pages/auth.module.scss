@@ -1,242 +1,180 @@
 .page {
-  width: 100%;
-  height: 100%;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background-color: var(--background-two);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  .wrapper {
-    max-width: 500px;
-    height: 100%;
-    margin: 0 auto;
-    display: grid;
-    overflow: auto;
-    scrollbar-width: none;
+  .container {
+    width: min(375px, 100%);
+    padding: 0 2rem;
+    border-top: 6px solid var(--accent);
+    border-radius: 0.25rem;
+    background-color: var(--background-one);
+    box-shadow: 0 1.5px 3px rgb(0 0 0 / 7%), 0 1.5px 3px rgb(0 0 0 / 9%);
 
-    &::-webkit-scrollbar {
-      display: none;
+    .wrapper {
+      height: 60px;
+      margin: 2rem 0;
+
+      .logo {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
     }
 
-    .content {
-      height: fit-content;
-      margin: auto;
-      padding: 2rem;
+    h1 {
+      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+      text-transform: uppercase;
+    }
 
-      h1 {
-        margin-bottom: 0.2rem;
-        font-size: 1.5rem;
-        font-weight: 700;
-      }
+    p {
+      margin-bottom: 1.5rem;
+      color: var(--foreground-two);
+      font-size: 1rem;
+      text-align: center;
+    }
 
-      p {
-        color: var(--foreground-two);
-        font-size: 0.9rem;
-        font-weight: 500;
-      }
+    .form {
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
 
-      h3 {
-        color: var(--foreground-two);
-        font-size: 0.9rem;
-        font-weight: 500;
-        text-align: center;
-
-        &:not(:last-child) {
-          margin-bottom: 0.2rem;
-        }
-
-        a {
-          color: var(--foreground-one);
-          font-weight: 600;
-          text-transform: uppercase;
-          text-decoration: none;
-          transition: 100ms ease-in;
-
-          &:hover {
-            color: var(--accent);
-          }
-        }
-      }
-
-      h4 {
-        max-width: 300px;
-        margin: 1rem auto 0;
-        color: var(--foreground-two);
-        font-size: 0.6rem;
-        font-weight: 500;
-        text-align: center;
-
-        a {
-          color: var(--foreground-one);
-          font-weight: 600;
-          text-transform: uppercase;
-          text-decoration: none;
-          transition: 100ms ease-in;
-
-          &:hover {
-            color: var(--accent);
-          }
-        }
-      }
-
-      .form {
+      .field {
+        position: relative;
         width: 100%;
-        margin: 1rem 0 2rem;
-        display: flex;
-        flex-direction: column;
+        height: 3.5rem;
+        margin-bottom: 1rem;
 
-        .field {
-          position: relative;
+        input {
           width: 100%;
-          height: 3.75rem;
-          margin-bottom: 1rem;
+          height: 100%;
+          padding: 1.2rem 1rem 0;
+          border: 1px solid #ddd;
+          border-radius: 0.25rem;
+          font-size: 1rem;
+          font-weight: 500;
 
-          input {
-            width: 100%;
-            height: 100%;
-            padding: 1rem 1rem 0;
-            background: var(--background-two);
-            font-size: 1rem;
-            font-weight: 600;
-
-            &[name="email"],
-            &[name="phoneNumber"] {
-              padding-right: 2.75rem;
-            }
-
-            &[type="password"] {
-              padding-right: 6rem;
-            }
-
-            &:-webkit-autofill {
-              box-shadow: 0 0 0 30px var(--background-two) inset !important;
-            }
-
-            &:focus ~ label,
-            &:not(:placeholder-shown) ~ label {
-              transform: translateY(-137%);
-              color: var(--foreground-two);
-              font-size: 0.6rem;
-            }
-
-            &[type="password"] ~ .validity {
-              transition: 100ms ease-in;
-            }
+          &[name="password"] {
+            padding-right: 3.25rem;
           }
 
-          label {
-            position: absolute;
-            top: 50%;
-            left: 1rem;
-            transform: translateY(-50%);
-            font-size: 1rem;
-            font-weight: 600;
-            text-transform: capitalize;
-            pointer-events: none;
-            user-select: none;
-
-            .weak {
-              color: var(--error);
-            }
-
-            .medium {
-              color: var(--warning);
-            }
-
-            .strong {
-              color: var(--valid);
-            }
+          &:focus {
+            border-color: var(--accent);
           }
 
-          .validity {
-            position: absolute;
-            top: 50%;
-            right: 1rem;
-            transform: translateY(-50%);
-            width: 1rem;
-            height: 1rem;
-            border-radius: 50%;
-
-            &.false {
-              background: var(--error);
-
-              &::before {
-                content: "✖";
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                color: var(--background-two);
-                font-size: 0.55rem;
-              }
-            }
-
-            &.true {
-              background: var(--valid);
-
-              &::before {
-                content: "✔";
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                color: var(--background-two);
-                font-size: 0.55rem;
-              }
-            }
-
-            &.weak {
-              background: var(--error);
-            }
-
-            &.medium {
-              background: var(--warning);
-            }
-
-            &.strong {
-              background: var(--valid);
-            }
-
-            &.weak ~ .show_button,
-            &.medium ~ .show_button,
-            &.strong ~ .show_button {
-              right: 2.75rem;
-            }
+          &:focus ~ label,
+          &:not(:placeholder-shown) ~ label {
+            transform: translateY(-138%);
+            color: var(--foreground-two);
+            font-size: 0.6rem;
           }
 
-          .show_button {
-            position: absolute;
-            top: 50%;
-            right: calc(1rem - 2px);
-            transform: translateY(-50%);
-            font-size: 1.25rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: 100ms ease-in;
-
-            &:hover {
-              color: var(--accent);
-            }
+          &:focus ~ label {
+            color: var(--accent);
           }
         }
 
-        button {
-          width: 100%;
-          height: 3.75rem;
-          background: var(--foreground-one);
-          color: var(--background-one);
+        label {
+          position: absolute;
+          top: 50%;
+          left: calc(1rem + 1px);
+          transform: translateY(-50%);
+          font-size: 1rem;
           font-weight: 600;
-          text-align: center;
           text-transform: capitalize;
+          pointer-events: none;
+          user-select: none;
+        }
+
+        .show_button {
+          position: absolute;
+          top: 50%;
+          right: calc(1rem + 1px);
+          transform: translateY(-50%);
+          font-size: 1.25rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           cursor: pointer;
           transition: 100ms ease-in;
 
           &:hover {
-            background: var(--accent);
+            color: var(--accent);
           }
+        }
+      }
 
-          &:disabled:hover {
-            background: var(--error);
-            cursor: not-allowed;
+      button {
+        height: 3.5rem;
+        border-radius: 0.25rem;
+        background: var(--accent);
+        color: var(--background-one);
+        font-weight: 600;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: 100ms ease-in;
+
+        &:hover {
+          background: var(--dark-accent);
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+        }
+      }
+
+      h4 {
+        margin-top: 1.5rem;
+        color: var(--foreground-two);
+        font-size: 0.8rem;
+        font-weight: 400;
+        text-align: center;
+
+        a {
+          color: var(--foreground-one);
+          font-weight: 500;
+          text-decoration: none;
+          transition: 100ms ease-in;
+
+          &:hover {
+            color: var(--accent);
           }
+        }
+      }
+    }
+
+    .bottom_section {
+      position: relative;
+      left: -2rem;
+      width: calc(100% + 4rem);
+      display: flex;
+      flex-direction: column;
+
+      button {
+        padding: 0.75rem;
+        border-top: 1px solid #ddd;
+        font-size: 0.8rem;
+        font-weight: 400;
+        cursor: pointer;
+        transition: 100ms ease-in;
+
+        &:hover {
+          background-color: var(--background-two);
+        }
+
+        span {
+          font-weight: 500;
+        }
+
+        a {
+          color: var(--foreground-two);
+          text-decoration: none;
         }
       }
     }

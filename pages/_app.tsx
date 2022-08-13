@@ -1,35 +1,25 @@
 import type { AppProps } from "next/app";
-import { useEffect } from "react";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 
-import { UserProvider } from "../contexts/user-context";
+import { AuthContextProvider } from "../context/auth.context";
 
 import "../styles/globals.scss";
 import styles from "../styles/components/layout.module.scss";
-import Header from "../components/header";
+
+const Header = dynamic(() => import("../components/header"));
 
 const App = ({ Component, pageProps }: AppProps) => {
-  useEffect(() => {
-    const connectDatabase = async () => {
-      try {
-        const { default: axios } = await import("../services/axios");
-        await axios.get<null>("/database");
-      } catch (error: any) {
-        return alert(error.response.data.message);
-      }
-    }
-
-    connectDatabase();
-  }, []);
+  const router = useRouter();
+  const isHeaderVisible = ["/auth"].every(path => !router.pathname.includes(path));
 
   return (
-    <UserProvider>
+    <AuthContextProvider>
       <main className={styles.layout}>
-        <Header />
-        <div className={styles.page}>
-          <Component {...pageProps} />
-        </div>
+        {isHeaderVisible && <Header />}
+        <Component {...pageProps} />
       </main>
-    </UserProvider>
+    </AuthContextProvider>
   );
 }
 

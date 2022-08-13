@@ -1,0 +1,76 @@
+import { createContext, useEffect, useState } from "react";
+
+export interface User {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
+interface ContextProviderState {
+  callback: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+  token: [string, React.Dispatch<React.SetStateAction<string>>];
+  user: [User, React.Dispatch<React.SetStateAction<User>>];
+};
+
+const userInitialState: User = {
+  _id: "",
+  firstName: "",
+  lastName: "",
+  email: ""
+};
+
+export const AuthContext = createContext<ContextProviderState>({} as ContextProviderState);
+
+export const AuthContextProvider: React.FC<{ children: JSX.Element }> = ({ children }) => {
+  const [callback, setCallback] = useState(false);
+  const [token, setToken] = useState("");
+  const [user, setUser] = useState<User>(userInitialState);
+
+  useEffect(() => {
+    const authenticated = localStorage.getItem("authenticated");
+    if (!authenticated) return;
+
+    const getAccesToken = async () => {
+      try {
+        const { default: authService } = await import("../services/auth.service");
+        const { data } = await authService.refreshToken();
+        
+        setToken(data.accessToken);
+        setTimeout(() => getAccesToken, 60 * 10); // 10 minutes
+      } catch (error: any) {
+        alert(error.response.data.message);
+      }
+    }
+
+    getAccesToken();
+  }, []);
+
+  useEffect(() => {
+    if (!token) return;
+
+    const getUser = async () => {
+      try {
+        const { default: userService } = await import("../services/user.service");
+        const { data } = await userService.getUser(token);
+        setUser(data);
+      } catch (error: any) {
+        alert(error.response.data.message);
+      }
+    }
+
+    getUser();
+  }, [token, callback]);
+
+  const state: ContextProviderState = {
+    callback: [callback, setCallback],
+    token: [token, setToken],
+    user: [user, setUser]
+  };
+
+  return (
+    <AuthContext.Provider value={state}>
+      {children}
+    </AuthContext.Provider>
+  );
+}

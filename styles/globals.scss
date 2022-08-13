@@ -1,16 +1,15 @@
 :root {
-  --foreground-one: #0e0e0e;
-  --foreground-two: #939393;
+  --foreground-one: #1f2a35;
+  --foreground-two: #374b5e;
+  --foreground-three: #96a2a7;
+
   --background-one: #ffffff;
-  --background-two: #f6f6f6;
+  --background-two: #f0f2f5;
 
-  --accent: #2463eb;
-  --valid: #01d5bb;
-  --warning: #ffc900;
-  --error: #ff716d;
+  --accent: #34dca3;
+  --dark-accent: #05aa76;
 
-  --header-width: 100px;
-  --header-height: 65px;
+  --header-height: 96px;
 }
 
 *,
@@ -27,8 +26,9 @@ input,
 textarea,
 button {
   color: var(--foreground-one);
-  font-family: "Poppins", sans-serif;
+  font-family: "SimplonNorm", sans-serif;
   font-size: 16px;
+  letter-spacing: 0.75px;
 }
 
 input,
@@ -39,6 +39,10 @@ button {
   outline: none;
 }
 
+input[type="password"] {
+  font-family: sans-serif;
+}
+
 body {
   scrollbar-width: none;
 
@@ -47,10 +51,31 @@ body {
   }
 }
 
-::selection {
-  background: var(--accent);
-  color: var(--background-one);
+// SimplonNorm
+@font-face {
+  font-family: "SimplonNorm";
+  font-weight: 300;
+  font-style: normal;
+  src: url("../public/fonts/SimplonNorm-Light.otf");
 }
 
-// Poppins
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@font-face {
+  font-family: "SimplonNorm";
+  font-weight: 400;
+  font-style: normal;
+  src: url("../public/fonts/SimplonNorm-Regular.otf");
+}
+
+@font-face {
+  font-family: "SimplonNorm";
+  font-weight: 500;
+  font-style: normal;
+  src: url("../public/fonts/SimplonNorm-Medium.otf");
+}
+
+@font-face {
+  font-family: "SimplonNorm";
+  font-weight: 700;
+  font-style: normal;
+  src: url("../public/fonts/SimplonNorm-Bold.otf");
+}

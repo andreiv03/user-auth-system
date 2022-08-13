@@ -1,12 +1,32 @@
-const ADMINS = process.env.ADMINS && process.env.ADMINS.split(" ");
-const JWT_SECRET = process.env.JWT_SECRET;
+interface Constants {
+  JWT_SECRET: string;
+  MONGODB: {
+    DATABASE_NAME: string;
+    URI: string;
+  };
+  CLOUDINARY: {
+    API_KEY: string;
+    API_SECRET: string;
+    CLOUD_NAME: string;
+  };
+};
 
-// Database
-const MONGODB_URI = process.env.MONGODB_URI;
+const constants: Constants = {
+  JWT_SECRET: process.env.JWT_SECRET as string,
+  MONGODB: {
+    DATABASE_NAME: process.env.MONGODB_DATABASE_NAME as string,
+    URI: process.env.MONGODB_URI as string
+  },
+  CLOUDINARY: {
+    API_KEY: process.env.CLOUDINARY_API_KEY as string,
+    API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
+    CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME as string
+  }
+};
 
-// Cloudinary
-const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
-const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
-const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
+Object.entries(constants).forEach(([key, value]) => {
+  if (typeof value === "undefined")
+    throw new Error(`${key} not found!`);
+});
 
-export { ADMINS, JWT_SECRET, MONGODB_URI, CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET };
+export default constants;

@@ -5,11 +5,11 @@ const refreshToken = async (req: NextApiRequest, res: NextApiResponse) => {
     const refreshTokenCookie = req.cookies.refreshToken;
     if (!refreshTokenCookie) return res.status(400).json({ message: "Authentication required!" });
 
-    const { default: Token } = await import("../../../utils/token");
-    const decoded = await Token.verifyToken(refreshTokenCookie);
+    const { signToken, verifyToken } = await import("../../../utils/token");
+    const decoded = await verifyToken(refreshTokenCookie);
     if (!decoded) return res.status(400).json({ message: "Authentication required!" });
 
-    const accessToken = await Token.signToken(decoded.sub, "10m");
+    const accessToken = await signToken(decoded.sub, "10m");
     return res.status(200).json({ accessToken });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
