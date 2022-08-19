@@ -58,7 +58,7 @@ const Login: NextPage = () => {
         </div>
 
         <h1>Welcome back</h1>
-        <p>Enter your email address and password in order to access your account.</p>
+        <p>Enter your email address and password in order to access your account</p>
 
         <form className={styles.form} onSubmit={handleFormSubmit} noValidate>
           <div className={styles.field}>

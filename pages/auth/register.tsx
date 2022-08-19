@@ -79,7 +79,7 @@ const Register: NextPage = () => {
         </div>
 
         <h1>Create an account</h1>
-        <p>Complete and submit the form in order to access your account.</p>
+        <p>Sign up for free and live the best experience on E-commerce Website</p>
       
         <form className={styles.form} onSubmit={handleFormSubmit} noValidate>
           <div className={styles.field}>
