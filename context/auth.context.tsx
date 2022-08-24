@@ -2,12 +2,14 @@ import { createContext, useEffect, useState } from "react";
 
 export interface User {
   _id: string;
+  createdAt: string;
+  email: string;
   firstName: string;
   lastName: string;
-  email: string;
+  updatedAt: string;
 };
 
-interface ContextProviderState {
+interface ContextState {
   callback: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   token: [string, React.Dispatch<React.SetStateAction<string>>];
   user: [User, React.Dispatch<React.SetStateAction<User>>];
@@ -15,12 +17,14 @@ interface ContextProviderState {
 
 const userInitialState: User = {
   _id: "",
+  createdAt: "",
+  email: "",
   firstName: "",
   lastName: "",
-  email: ""
+  updatedAt: ""
 };
 
-export const AuthContext = createContext<ContextProviderState>({} as ContextProviderState);
+export const AuthContext = createContext<ContextState>({} as ContextState);
 
 export const AuthContextProvider: React.FC<{ children: JSX.Element }> = ({ children }) => {
   const [callback, setCallback] = useState(false);
@@ -62,7 +66,7 @@ export const AuthContextProvider: React.FC<{ children: JSX.Element }> = ({ child
     getUser();
   }, [token, callback]);
 
-  const state: ContextProviderState = {
+  const state: ContextState = {
     callback: [callback, setCallback],
     token: [token, setToken],
     user: [user, setUser]

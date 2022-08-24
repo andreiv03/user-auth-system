@@ -4,11 +4,6 @@ interface Constants {
     DATABASE_NAME: string;
     URI: string;
   };
-  CLOUDINARY: {
-    API_KEY: string;
-    API_SECRET: string;
-    CLOUD_NAME: string;
-  };
 };
 
 const constants: Constants = {
@@ -16,11 +11,6 @@ const constants: Constants = {
   MONGODB: {
     DATABASE_NAME: process.env.MONGODB_DATABASE_NAME as string,
     URI: process.env.MONGODB_URI as string
-  },
-  CLOUDINARY: {
-    API_KEY: process.env.CLOUDINARY_API_KEY as string,
-    API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
-    CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME as string
   }
 };
 

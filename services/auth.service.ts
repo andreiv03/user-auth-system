@@ -1,9 +1,9 @@
 import axios from "../utils/axios";
 
 interface RegisterFormData {
+  email: string;
   firstName: string;
   lastName: string;
-  email: string;
   password: string;
 };
 

@@ -1,19 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import cookie from "cookie";
 import bcrypt from "bcrypt";
+import cookie from "cookie";
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: {
+    email: string;
     firstName: string;
     lastName: string;
-    email: string;
     password: string;
   };
 };
 
 const register = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { email, firstName, lastName, password } = req.body;
 
     const { connectToDatabase } = await import("../../../utils/mongodb");
     const { database } = await connectToDatabase();
@@ -23,11 +23,11 @@ const register = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await database.collection("users").insertOne({
+      createdAt: new Date(),
+      email,
       firstName,
       lastName,
-      email,
       password: hashedPassword,
-      createdAt: new Date(),
       updatedAt: new Date()
     });
 
@@ -36,9 +36,9 @@ const register = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     const refreshToken = await signToken(newUser.insertedId, "7d");
 
     res.setHeader("Set-Cookie", cookie.serialize("refreshToken", refreshToken, {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
       httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
       sameSite: "strict",
       secure: process.env.NODE_ENV !== "development"
     }));

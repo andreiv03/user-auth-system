@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import cookie from "cookie";
 import bcrypt from "bcrypt";
+import cookie from "cookie";
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: {
@@ -27,9 +27,9 @@ const login = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     const refreshToken = await signToken(user._id, "7d");
 
     res.setHeader("Set-Cookie", cookie.serialize("refreshToken", refreshToken, {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
       httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
       sameSite: "strict",
       secure: process.env.NODE_ENV !== "development"
     }));

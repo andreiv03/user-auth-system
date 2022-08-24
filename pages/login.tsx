@@ -5,10 +5,10 @@ import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
 
-import { AuthContext } from "../../context/auth.context";
-import { handleFormDataChange } from "../../utils/handlers";
+import { AuthContext } from "../context/auth.context";
+import { handleFormDataChange } from "../utils/handlers";
 
-import styles from "../../styles/pages/auth.module.scss";
+import styles from "../styles/pages/auth.module.scss";
 
 interface FormData {
   email: string;
@@ -27,13 +27,18 @@ const Login: NextPage = () => {
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+  const handleFormValidity = () => {
+    if (!formData.email || !formData.password) return true;
+    return false;
+  }
+
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
     try {
       setFormData(prevState => ({ ...prevState, password: "" }));
 
-      const { default: authService } = await import("../../services/auth.service");
+      const { default: authService } = await import("../services/auth.service");
       const { data } = await authService.login(formData);
 
       localStorage.setItem("authenticated", "true");
@@ -50,7 +55,7 @@ const Login: NextPage = () => {
         <div className={styles.wrapper}>
           <div className={styles.logo}>
             <Image
-              src="/assets/logo-v2.svg"
+              src="/assets/logo.svg"
               alt="Logo"
               layout="fill"
             />
@@ -91,11 +96,11 @@ const Login: NextPage = () => {
             </div>
           </div>
 
-          <button type="submit" disabled={!formData.email || !formData.password}>Sign in</button>
+          <button type="submit" disabled={handleFormValidity()}>Sign in</button>
         </form>
 
         <div className={styles.bottom_section}>
-          <Link href="/auth/register"><button type="button">No customer account yet? <span>Register now</span></button></Link>
+          <Link href="/register"><button type="button">No customer account yet? <span>Register now</span></button></Link>
         </div>
       </div>
     </div>

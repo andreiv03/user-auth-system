@@ -5,23 +5,23 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { RiEyeFill, RiEyeOffFill } from "react-icons/ri";
 
-import { AuthContext } from "../../context/auth.context";
-import { handleFormDataChange } from "../../utils/handlers";
-import { checkEmailValidity, checkPasswordStrength } from "../../utils/helpers";
+import { AuthContext } from "../context/auth.context";
+import { handleFormDataChange } from "../utils/handlers";
+import { checkEmailValidity, checkPasswordStrength } from "../utils/helpers";
 
-import styles from "../../styles/pages/auth.module.scss";
+import styles from "../styles/pages/auth.module.scss";
 
 interface FormData {
+  email: string;
   firstName: string;
   lastName: string;
-  email: string;
   password: string;
 };
 
 const formDataInitialState: FormData = {
+  email: "",
   firstName: "",
   lastName: "",
-  email: "",
   password: ""
 };
 
@@ -30,8 +30,8 @@ const Register: NextPage = () => {
   const { token: [, setToken] } = useContext(AuthContext);
 
   const [formData, setFormData] = useState<FormData>(formDataInitialState);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState("");
 
   const handleFormValidity = () => {
@@ -46,7 +46,7 @@ const Register: NextPage = () => {
     try {
       setFormData(prevState => ({ ...prevState, password: "" }));
 
-      const { default: authService } = await import("../../services/auth.service");
+      const { default: authService } = await import("../services/auth.service");
       const { data } = await authService.register(formData);
 
       localStorage.setItem("authenticated", "true");
@@ -71,7 +71,7 @@ const Register: NextPage = () => {
         <div className={styles.wrapper}>
           <div className={styles.logo}>
             <Image
-              src="/assets/logo-v2.svg"
+              src="/assets/logo.svg"
               alt="Logo"
               layout="fill"
             />
@@ -79,7 +79,7 @@ const Register: NextPage = () => {
         </div>
 
         <h1>Create an account</h1>
-        <p>Sign up for free and live the best experience on E-commerce Website</p>
+        <p>Sign up for free and live the best experience on our website</p>
       
         <form className={styles.form} onSubmit={handleFormSubmit} noValidate>
           <div className={styles.field}>
@@ -108,7 +108,7 @@ const Register: NextPage = () => {
             <label htmlFor="lastName">Last name</label>
           </div>
 
-          <div className={styles.field}>
+          <div className={`${styles.field} ${formData.email && !isEmailValid ? styles.invalid : ""}`}>
             <input
               type="email"
               id="email"
@@ -118,7 +118,7 @@ const Register: NextPage = () => {
               value={formData.email}
               onChange={event => handleFormDataChange(event.target.name, event.target.value, setFormData)}
             />
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Email {formData.email && `(${isEmailValid ? "Valid" : "Invalid"})`}</label>
           </div>
 
           <div className={styles.field}>
@@ -143,7 +143,7 @@ const Register: NextPage = () => {
         </form>
 
         <div className={styles.bottom_section}>
-          <Link href="/auth/login"><button type="button">Already have an account? <span>Sign in now</span></button></Link>
+          <Link href="/login"><button type="button">Already have an account? <span>Sign in now</span></button></Link>
         </div>
       </div>
     </div>

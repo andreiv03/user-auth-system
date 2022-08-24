@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import constants from "../constants";
 
-const signToken = (subject: any, expiresIn: string): Promise<string> => {
+export const signToken = (subject: any, expiresIn: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     const data = {
       sub: subject,
@@ -15,7 +15,7 @@ const signToken = (subject: any, expiresIn: string): Promise<string> => {
   });
 }
 
-const verifyToken = (token: string): Promise<string | JwtPayload> => {
+export const verifyToken = (token: string): Promise<string | JwtPayload> => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, constants.JWT_SECRET, (error, payload) => {
       if (error || !payload) return reject(error || "Payload not found!");
@@ -23,5 +23,3 @@ const verifyToken = (token: string): Promise<string | JwtPayload> => {
     });
   });
 }
-
-export { signToken, verifyToken };

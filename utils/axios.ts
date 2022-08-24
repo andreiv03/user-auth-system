@@ -1,9 +1,11 @@
-import axios from "axios";
+import axios, { AxiosRequestHeaders } from "axios";
+
+const headers: AxiosRequestHeaders = {
+  "Content-Type": "application/json"
+};
 
 export default axios.create({
-  withCredentials: true,
   baseURL: "/api",
-  headers: {
-    "Content-Type": "application/json"
-  }
+  headers,
+  withCredentials: true
 });

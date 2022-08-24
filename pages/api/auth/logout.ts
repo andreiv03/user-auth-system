@@ -4,8 +4,8 @@ import cookie from "cookie";
 const logout = (req: NextApiRequest, res: NextApiResponse) => {
   try {
     res.setHeader("Set-Cookie", cookie.serialize("refreshToken", "", {
-      path: "/",
       maxAge: -1,
+      path: "/"
     }));
 
     return res.status(200).end();

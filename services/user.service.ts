@@ -1,8 +1,11 @@
+import { User } from "../context/auth.context";
 import axios from "../utils/axios";
 
 class UserService {
-  getUser() {
-    
+  getUser(accessToken: string) {
+    return axios.get<User>("/user/get-user", {
+      headers: { Authorization: accessToken }
+    });
   }
 };
 
