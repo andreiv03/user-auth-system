@@ -60,7 +60,7 @@ const Home: NextPage = () => {
           </>
         ) : (
           <>
-            <h1>You're not authenticated!</h1>
+            <h1>You are not authenticated!</h1>
             <p>Please sign in or create a new account in order to access your account</p>
 
             <Link href="/login"><button type="button">Sign in</button></Link>
