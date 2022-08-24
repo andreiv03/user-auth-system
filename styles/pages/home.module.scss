@@ -1,0 +1,83 @@
+.page {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background-color: var(--background-two);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .container {
+    width: min(375px, 100%);
+    padding: 0 2rem 2rem;
+    border-top: 6px solid var(--accent);
+    border-radius: 0.25rem;
+    background-color: var(--background-one);
+    box-shadow: 0 1.5px 3px rgb(0 0 0 / 7%), 0 1.5px 3px rgb(0 0 0 / 9%);
+
+    .wrapper {
+      height: 60px;
+      margin: 2rem 0 1.75rem;
+
+      .logo {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    h1 {
+      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+      color: var(--foreground-two);
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    button {
+      width: 100%;
+      height: 3.5rem;
+      border-radius: 0.25rem;
+      background: var(--accent);
+      color: var(--background-one);
+      font-weight: 600;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: 100ms ease-in;
+
+      &:hover {
+        background: var(--dark-accent);
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 1rem;
+      }
+    }
+
+    .field {
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+
+      &:last-of-type {
+        margin-bottom: 1.5rem;
+      }
+
+      h3 {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+
+      h4 {
+        font-size: 1rem;
+        font-weight: 400;
+      }
+    }
+  }
+}

@@ -15,7 +15,7 @@ interface ContextState {
   user: [User, React.Dispatch<React.SetStateAction<User>>];
 };
 
-const userInitialState: User = {
+export const userInitialState: User = {
   _id: "",
   createdAt: "",
   email: "",
