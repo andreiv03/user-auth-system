@@ -1,17 +1,14 @@
 export interface LoginFormData {
-	ip: string;
-	password: string;
-	username: string;
-	userAgent: string;
+  email: string;
+  password: string;
 }
 
 export interface RegisterFormData extends LoginFormData {
-	email: string;
+  firstName: string;
+  lastName: string;
 }
 
 export interface AuthResponse {
-	accessToken: string;
-	message: string;
-	refreshToken: string;
-	sessionId: string;
+  accessToken: string;
+  error?: string;
 }

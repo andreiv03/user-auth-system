@@ -3,3 +3,6 @@ node_modules/
 
 # production
 .next/
+
+# .env
+.env*
